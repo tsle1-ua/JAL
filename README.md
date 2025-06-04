@@ -129,6 +129,76 @@ FACEBOOK_CLIENT_SECRET=tu_secreto
 FACEBOOK_REDIRECT_URI="${APP_URL}/api/login/facebook/callback"
 ```
 
+## 🌱 Variables de Entorno
+
+Todas las claves disponibles se encuentran en `.env.example`. La siguiente tabla
+resume para qué sirve cada una:
+
+| Clave | Descripción |
+|-------|-------------|
+| APP_NAME | Nombre de la aplicación |
+| APP_ENV | Entorno de ejecución (local, production, etc.) |
+| APP_KEY | Clave de cifrado generada con `php artisan key:generate` |
+| APP_DEBUG | Modo debug para mensajes detallados |
+| APP_TIMEZONE | Zona horaria por defecto |
+| APP_URL | URL base de la aplicación |
+| APP_LOCALE | Idioma por defecto |
+| APP_FALLBACK_LOCALE | Idioma de respaldo |
+| APP_FAKER_LOCALE | Locale usado por Faker |
+| APP_MAINTENANCE_DRIVER | Almacenamiento del modo mantenimiento |
+| PHP_CLI_SERVER_WORKERS | Trabajadores del servidor PHP integrado |
+| BCRYPT_ROUNDS | Coste de hashing para bcrypt |
+| LOG_CHANNEL | Canal de logs por defecto |
+| LOG_STACK | Canal usado para la pila de logs |
+| LOG_DEPRECATIONS_CHANNEL | Canal para avisos deprecados |
+| LOG_LEVEL | Nivel mínimo de log |
+| DB_CONNECTION | Driver de base de datos |
+| SESSION_DRIVER | Driver de sesiones |
+| SESSION_LIFETIME | Duración de la sesión en minutos |
+| SESSION_ENCRYPT | Cifrar datos de sesión |
+| SESSION_PATH | Ruta de la cookie de sesión |
+| SESSION_DOMAIN | Dominio de la cookie de sesión |
+| BROADCAST_CONNECTION | Driver de broadcasting |
+| PUSHER_APP_ID | ID de la aplicación de Pusher |
+| PUSHER_APP_KEY | Key de Pusher |
+| PUSHER_APP_SECRET | Secret de Pusher |
+| PUSHER_APP_CLUSTER | Cluster de Pusher |
+| VITE_PUSHER_APP_KEY | Clave de Pusher para el frontend |
+| VITE_PUSHER_APP_CLUSTER | Cluster de Pusher para el frontend |
+| FILESYSTEM_DISK | Disco por defecto para el sistema de ficheros |
+| QUEUE_CONNECTION | Driver de colas |
+| CACHE_STORE | Store de caché |
+| CACHE_PREFIX | Prefijo para claves de caché |
+| MEMCACHED_HOST | Host de Memcached |
+| REDIS_CLIENT | Cliente de Redis |
+| REDIS_HOST | Host de Redis |
+| REDIS_PASSWORD | Contraseña de Redis |
+| REDIS_PORT | Puerto de Redis |
+| MAIL_MAILER | Driver de correo |
+| MAIL_SCHEME | Esquema del servidor SMTP |
+| MAIL_HOST | Host del servidor de correo |
+| MAIL_PORT | Puerto del servidor de correo |
+| MAIL_USERNAME | Usuario del servidor de correo |
+| MAIL_PASSWORD | Contraseña del servidor de correo |
+| MAIL_FROM_ADDRESS | Dirección remitente |
+| MAIL_FROM_NAME | Nombre remitente |
+| AWS_ACCESS_KEY_ID | Clave de acceso AWS |
+| AWS_SECRET_ACCESS_KEY | Clave secreta AWS |
+| AWS_DEFAULT_REGION | Región AWS |
+| AWS_BUCKET | Bucket de S3 |
+| AWS_USE_PATH_STYLE_ENDPOINT | Forzar path style en S3 |
+| VITE_APP_NAME | Nombre de la app para el front |
+| GOOGLE_MAPS_API_KEY | API key de Google Maps |
+| GOOGLE_CLIENT_ID | Cliente OAuth de Google |
+| GOOGLE_CLIENT_SECRET | Secreto OAuth de Google |
+| GOOGLE_REDIRECT_URI | URL de callback de Google |
+| FACEBOOK_CLIENT_ID | App ID de Facebook |
+| FACEBOOK_CLIENT_SECRET | Secret de Facebook |
+| FACEBOOK_REDIRECT_URI | URL de callback de Facebook |
+| LISTING_CLEANUP_THRESHOLD_DAYS | Días de margen para limpiar anuncios |
+| LISTING_STATISTICS_CACHE_TTL | Tiempo en segundos del caché de estadísticas |
+| FCM_SERVER_KEY | Server key para Firebase Cloud Messaging |
+
 ## 🚀 Ejecutar el proyecto
 
 ### Desarrollo
