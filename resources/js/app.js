@@ -18,6 +18,10 @@ window.Echo = new Echo({
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .catch(err => console.error('SW registration failed:', err));
+    }
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     const headers = {
