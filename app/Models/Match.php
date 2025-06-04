@@ -41,6 +41,14 @@ class Match extends Model
     }
 
     /**
+     * Messages exchanged within this match.
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    /**
      * Check if this is a mutual match.
      */
     public function getIsMutualMatchAttribute(): bool

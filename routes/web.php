@@ -71,16 +71,12 @@ Route::resource('events', EventController::class);
 Route::resource('places', PlaceController::class);
 Route::resource('leisure-zones', LeisureZoneController::class)->middleware(['auth', 'verified']);
 
-// Rutas del sistema RoomieMatch
+// RoomieMatch landing and functionality
+Route::get('/roomie-match', [RoomieMatchController::class, 'index'])->name('roomie.index');
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
-    Route::get('/', [RoomieMatchController::class, 'index'])->name('index');
-    Route::get('/discover', [RoomieMatchController::class, 'discover'])->name('discover');
     Route::post('/like/{user}', [RoomieMatchController::class, 'like'])->name('like');
-    Route::post('/dislike/{user}', [RoomieMatchController::class, 'dislike'])->name('dislike');
-    Route::get('/matches', [RoomieMatchController::class, 'matches'])->name('matches');
-    Route::get('/pending', [RoomieMatchController::class, 'pending'])->name('pending');
-    Route::delete('/matches/{match}', [RoomieMatchController::class, 'removeMatch'])->name('matches.remove');
-    Route::get('/compatibility/{user}', [RoomieMatchController::class, 'showCompatibility'])->name('compatibility');
+    Route::post('/message/{match}', [RoomieMatchController::class, 'sendMessage'])->name('message');
+    Route::get('/conversation/{match}', [RoomieMatchController::class, 'conversation'])->name('conversation');
 });
 
 // Rutas de información académica
