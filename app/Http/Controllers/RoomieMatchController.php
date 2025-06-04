@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\RoomieMatchService;
-use App\Models\Match as RoomMatch;
+
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;

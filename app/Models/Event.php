@@ -19,7 +19,7 @@ class Event extends Model
         'place_id',
         'user_id',
         'image_path',
-        'category',
+        'category_id',
         'is_public',
         'price',
         'max_attendees',
@@ -53,6 +53,14 @@ class Event extends Model
     public function place()
     {
         return $this->belongsTo(Place::class);
+    }
+
+    /**
+     * Get the category for the event.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     /**
@@ -202,9 +210,9 @@ class Event extends Model
     /**
      * Scope to filter by category.
      */
-    public function scopeByCategory($query, $category)
+    public function scopeByCategory($query, $categoryId)
     {
-        return $query->where('category', $category);
+        return $query->where('category_id', $categoryId);
     }
 
     /**

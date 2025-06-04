@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Models\Listing;
 use App\Repositories\ListingRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ListingService
 {
@@ -53,6 +55,21 @@ class ListingService
         return $this->listingRepository->searchWithFilters($filters);
     }
 
+    public function searchListingsPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        if (isset($filters['university'])) {
+            $coords = $this->getUniversityCoordinates($filters['university']);
+            if ($coords) {
+                $filters['latitude'] = $coords['lat'];
+                $filters['longitude'] = $coords['lng'];
+                $filters['radius'] = $filters['radius'] ?? 5;
+            }
+            unset($filters['university']);
+        }
+
+        return $this->listingRepository->searchWithFiltersPaginated($filters, $perPage);
+    }
+
     public function getNearbyListings(float $latitude, float $longitude, float $radius = 10): Collection
     {
         return $this->listingRepository->getNearby($latitude, $longitude, $radius);
@@ -60,7 +77,7 @@ class ListingService
 
     public function createListing(array $data, array $images = []): Listing
     {
-        return DB::transaction(function () use ($data, $images) {
+        $listing = DB::transaction(function () use ($data, $images) {
             // Asignar usuario actual
             $data['user_id'] = auth()->id();
 
@@ -80,11 +97,15 @@ class ListingService
 
             return $this->listingRepository->create($data);
         });
+
+        Cache::forget('listing.statistics');
+
+        return $listing;
     }
 
     public function updateListing(int $id, array $data, array $images = []): bool
     {
-        return DB::transaction(function () use ($id, $data, $images) {
+        $updated = DB::transaction(function () use ($id, $data, $images) {
             $listing = $this->listingRepository->findById($id);
             
             if (!$listing) {
@@ -117,11 +138,17 @@ class ListingService
 
             return $this->listingRepository->update($id, $data);
         });
+
+        if ($updated) {
+            Cache::forget('listing.statistics');
+        }
+
+        return $updated;
     }
 
     public function deleteListing(int $id): bool
     {
-        return DB::transaction(function () use ($id) {
+        $deleted = DB::transaction(function () use ($id) {
             $listing = $this->listingRepository->findById($id);
             
             if (!$listing) {
@@ -138,6 +165,12 @@ class ListingService
 
             return $this->listingRepository->delete($id);
         });
+
+        if ($deleted) {
+            Cache::forget('listing.statistics');
+        }
+
+        return $deleted;
     }
 
     public function toggleAvailability(int $id): bool
@@ -181,22 +214,9 @@ class ListingService
 
     protected function geocodeAddress(string $address): ?array
     {
-        // Implementación básica de geocodificación
-        // En producción, usar servicio como Google Maps Geocoding API
-        // Por ahora, devolvemos coordenadas de ejemplo
-        
-        // Esto es solo un ejemplo - en producción usar una API real
-        $defaultCoordinates = [
-            'Madrid' => ['lat' => 40.4168, 'lng' => -3.7038],
-            'Barcelona' => ['lat' => 41.3851, 'lng' => 2.1734],
-            'Valencia' => ['lat' => 39.4699, 'lng' => -0.3763],
-            'Sevilla' => ['lat' => 37.3891, 'lng' => -5.9845],
-        ];
-
-        foreach ($defaultCoordinates as $city => $coords) {
-            if (stripos($address, $city) !== false) {
-                return $coords;
             }
+        } catch (\Throwable $e) {
+            Log::error('Geocoding error: ' . $e->getMessage());
         }
 
         return null;
@@ -216,15 +236,17 @@ class ListingService
 
     public function getListingStatistics(): array
     {
-        $total = $this->listingRepository->getAll()->count();
-        $available = $this->listingRepository->getAvailable()->count();
-        $avgPrice = $this->listingRepository->getAvailable()->avg('price');
+        return Cache::remember('listing.statistics', 300, function () {
+            $total = $this->listingRepository->getAll()->count();
+            $available = $this->listingRepository->getAvailable()->count();
+            $avgPrice = $this->listingRepository->getAvailable()->avg('price');
 
-        return [
-            'total' => $total,
-            'available' => $available,
-            'occupied' => $total - $available,
-            'average_price' => round($avgPrice, 2),
-        ];
+            return [
+                'total' => $total,
+                'available' => $available,
+                'occupied' => $total - $available,
+                'average_price' => round($avgPrice, 2),
+            ];
+        });
     }
 }
