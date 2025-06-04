@@ -88,6 +88,7 @@ Route::resource('places', PlaceController::class);
 Route::get('/roomie-match', [RoomieMatchController::class, 'index'])->name('roomie.index');
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
     Route::post('/like/{user}', [RoomieMatchController::class, 'like'])->name('like');
+    Route::post('/dislike/{user}', [RoomieMatchController::class, 'dislike'])->name('dislike');
     Route::post('/message/{match}', [RoomieMatchController::class, 'sendMessage'])->name('message');
     Route::get('/conversation/{match}', [RoomieMatchController::class, 'conversation'])->name('conversation');
 });
