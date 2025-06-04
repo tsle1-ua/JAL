@@ -32,7 +32,7 @@ class EventController extends Controller
         ]);
 
         if (!empty(array_filter($filters))) {
-            $events = $this->eventService->searchEvents($filters);
+            $events = $this->eventService->searchEventsPaginated($filters);
         } else {
             $events = $this->eventService->getPaginatedEvents();
         }

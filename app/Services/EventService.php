@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Event;
 use App\Repositories\EventRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,11 @@ class EventService
     public function searchEvents(array $filters): Collection
     {
         return $this->eventRepository->searchWithFilters($filters);
+    }
+
+    public function searchEventsPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->eventRepository->searchWithFiltersPaginated($filters, $perPage);
     }
 
     public function getNearbyEvents(float $latitude, float $longitude, float $radius = 10): Collection

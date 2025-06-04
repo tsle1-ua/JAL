@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Listing;
 use App\Repositories\ListingRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,21 @@ class ListingService
         }
 
         return $this->listingRepository->searchWithFilters($filters);
+    }
+
+    public function searchListingsPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        if (isset($filters['university'])) {
+            $coords = $this->getUniversityCoordinates($filters['university']);
+            if ($coords) {
+                $filters['latitude'] = $coords['lat'];
+                $filters['longitude'] = $coords['lng'];
+                $filters['radius'] = $filters['radius'] ?? 5;
+            }
+            unset($filters['university']);
+        }
+
+        return $this->listingRepository->searchWithFiltersPaginated($filters, $perPage);
     }
 
     public function getNearbyListings(float $latitude, float $longitude, float $radius = 10): Collection

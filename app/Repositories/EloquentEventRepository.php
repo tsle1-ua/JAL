@@ -95,6 +95,41 @@ class EloquentEventRepository implements EventRepositoryInterface
         return $query->upcoming()->get();
     }
 
+    public function searchWithFiltersPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        $query = Event::with(['user', 'place'])->public();
+
+        $query->when(isset($filters['category']), function ($q) use ($filters) {
+            $q->byCategory($filters['category']);
+        });
+
+        $query->when(isset($filters['date']), function ($q) use ($filters) {
+            $q->onDate($filters['date']);
+        });
+
+        $query->when(isset($filters['start_date']) && isset($filters['end_date']), function ($q) use ($filters) {
+            $q->betweenDates($filters['start_date'], $filters['end_date']);
+        });
+
+        $query->when(isset($filters['city']), function ($q) use ($filters) {
+            $q->inCity($filters['city']);
+        });
+
+        $query->when(isset($filters['free']) && $filters['free'], function ($q) {
+            $q->free();
+        });
+
+        $query->when(isset($filters['available_spots']) && $filters['available_spots'], function ($q) {
+            $q->withAvailableSpots();
+        });
+
+        $query->when(isset($filters['search']), function ($q) use ($filters) {
+            $q->search($filters['search']);
+        });
+
+        return $query->upcoming()->paginate($perPage)->withQueryString();
+    }
+
     public function getNearby(float $latitude, float $longitude, float $radius): Collection
     {
         return Event::with(['user', 'place'])
