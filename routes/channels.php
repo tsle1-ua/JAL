@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
-use App\Models\Match as RoomMatch;
+use App\Models\RoomMatch;
 
 Broadcast::channel('match.{matchId}', function ($user, int $matchId) {
     return RoomMatch::where('id', $matchId)
