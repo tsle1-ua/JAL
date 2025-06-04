@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Subscription;
+use App\Models\NotificationSetting;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -105,6 +106,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    /**
+     * Get the user's notification settings.
+     */
+    public function notificationSetting()
+    {
+        return $this->hasOne(NotificationSetting::class);
     }
 
     /**
