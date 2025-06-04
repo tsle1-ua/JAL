@@ -58,6 +58,22 @@ docker-compose up
 ```
 Esto levantará los servicios de PHP, Node y MySQL listos para desarrollar.
 
+### ⚡ Configuración rápida con script
+Si prefieres un proceso automático puedes ejecutar el script `scripts/setup.sh`
+(o `scripts\setup.bat` en Windows) desde la raíz del proyecto. Este script
+instala las dependencias de PHP y Node, genera el archivo `.env`, ejecuta
+migraciones y seeders, compila los assets y, si añades el argumento `start`,
+levanta el servidor de desarrollo.
+
+```bash
+# Linux/macOS
+./scripts/setup.sh start
+
+# Windows
+scripts\setup.bat start
+```
+
+
 ### 1. Clonar el repositorio
 ```bash
 git clone https://github.com/tu-usuario/spandam.git
