@@ -30,12 +30,29 @@ class RoomieMatchController extends Controller
         return view('roomie.app', ['candidates' => $potential]);
     }
 
-    public function like(int $userId): RedirectResponse
+    public function like(Request $request, int $userId)
     {
         $result = $this->service->likeUser(Auth::id(), $userId);
+
+        if ($request->wantsJson()) {
+            return response()->json($result);
+        }
+
         if ($result['is_mutual_match'] ?? false) {
             session()->flash('new_match', $result['other_user']->name);
         }
+
+        return back();
+    }
+
+    public function dislike(Request $request, int $userId)
+    {
+        $result = $this->service->dislikeUser(Auth::id(), $userId);
+
+        if ($request->wantsJson()) {
+            return response()->json($result);
+        }
+
         return back();
     }
 

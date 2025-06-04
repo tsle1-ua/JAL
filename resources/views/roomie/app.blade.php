@@ -2,11 +2,7 @@
 
 @section('content')
 <div class="container py-4">
-    @if(session('new_match'))
-        <div class="alert alert-success" id="matchAlert">
-            ¡Enhorabuena! Has hecho match con {{ session('new_match') }}.
-        </div>
-    @endif
+    <div class="alert alert-success d-none" id="matchNotification"></div>
 
     <h2 class="mb-3">Usuarios sugeridos</h2>
     <div class="row">
@@ -15,9 +11,13 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ $candidate->name }}</h5>
-                        <form method="POST" action="{{ route('roomie.like', $candidate->id) }}">
+                        <form method="POST" action="{{ route('roomie.like', $candidate->id) }}" class="like-form d-inline">
                             @csrf
-                            <button class="btn btn-sm btn-success">Like</button>
+                            <button class="btn btn-sm btn-success me-2">Like</button>
+                        </form>
+                        <form method="POST" action="{{ route('roomie.dislike', $candidate->id) }}" class="dislike-form d-inline">
+                            @csrf
+                            <button class="btn btn-sm btn-danger">Dislike</button>
                         </form>
                     </div>
                 </div>
@@ -29,13 +29,3 @@
 </div>
 @endsection
 
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const alert = document.getElementById('matchAlert');
-        if(alert) {
-            setTimeout(() => alert.remove(), 4000);
-        }
-    });
-</script>
-@endpush
