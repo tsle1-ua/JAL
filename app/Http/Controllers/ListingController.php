@@ -216,10 +216,27 @@ class ListingController extends Controller
     public function statistics(): JsonResponse
     {
         $statistics = $this->listingService->getListingStatistics();
-        
+
         return response()->json([
             'success' => true,
             'statistics' => $statistics,
         ]);
+    }
+
+    /**
+     * Schedule a visit for a listing.
+     */
+    public function scheduleVisit(Request $request, int $id): RedirectResponse
+    {
+        $request->validate([
+            'visit_date' => 'required|date',
+            'visit_time' => 'required'
+        ]);
+
+        // In a real app we would persist the visit in database or send notification
+        $date = $request->visit_date;
+        $time = $request->visit_time;
+
+        return back()->with('success', "Visita reservada para {$date} a las {$time}.");
     }
 }

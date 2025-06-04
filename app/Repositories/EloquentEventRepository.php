@@ -23,7 +23,7 @@ class EloquentEventRepository implements EventRepositoryInterface
 
     public function findById(int $id): ?Event
     {
-        return Event::with(['user', 'place'])->find($id);
+        return Event::with(['user', 'place', 'attendees'])->find($id);
     }
 
     public function create(array $data): Event

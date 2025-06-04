@@ -56,6 +56,14 @@ class Event extends Model
     }
 
     /**
+     * Users attending this event.
+     */
+    public function attendees()
+    {
+        return $this->belongsToMany(User::class, 'event_user')->withTimestamps();
+    }
+
+    /**
      * Get the image URL.
      */
     public function getImageUrlAttribute(): ?string
@@ -169,6 +177,18 @@ class Event extends Model
     public function getDaysUntilEventAttribute(): int
     {
         return max(0, $this->date->diffInDays(now()));
+    }
+
+    /**
+     * Check if the authenticated user is attending.
+     */
+    public function getIsUserAttendingAttribute(): bool
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        return $this->attendees->contains(auth()->id());
     }
 
     /**

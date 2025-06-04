@@ -26,6 +26,12 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/ocio', function () {
+    $events = App\Models\Event::public()->upcoming()->get();
+    $places = App\Models\Place::all();
+    return view('events.index', compact('events', 'places'));
+})->name('ocio');
+
 // Rutas de autenticación (se instalarán con Laravel UI)
 Auth::routes(['verify' => true]);
 
@@ -58,25 +64,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('events.register');
     Route::delete('/events/{event}/unregister', [EventController::class, 'unregisterAttendance'])
         ->name('events.unregister');
+
+    // Reservar visita a un alojamiento
+    Route::post('/listings/{listing}/schedule-visit', [ListingController::class, 'scheduleVisit'])
+        ->name('listings.schedule');
 });
 
 // Rutas de recursos principales (algunas públicas)
 Route::resource('listings', ListingController::class);
 Route::resource('events', EventController::class);
 Route::resource('places', PlaceController::class);
-Route::post('/listings/{listing}/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
-Route::get('/listings/{listing}/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');
 
-// Rutas del sistema RoomieMatch
+// RoomieMatch landing and functionality
+Route::get('/roomie-match', [RoomieMatchController::class, 'index'])->name('roomie.index');
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
-    Route::get('/', [RoomieMatchController::class, 'index'])->name('index');
-    Route::get('/discover', [RoomieMatchController::class, 'discover'])->name('discover');
     Route::post('/like/{user}', [RoomieMatchController::class, 'like'])->name('like');
-    Route::post('/dislike/{user}', [RoomieMatchController::class, 'dislike'])->name('dislike');
-    Route::get('/matches', [RoomieMatchController::class, 'matches'])->name('matches');
-    Route::get('/pending', [RoomieMatchController::class, 'pending'])->name('pending');
-    Route::delete('/matches/{match}', [RoomieMatchController::class, 'removeMatch'])->name('matches.remove');
-    Route::get('/compatibility/{user}', [RoomieMatchController::class, 'showCompatibility'])->name('compatibility');
+    Route::post('/message/{match}', [RoomieMatchController::class, 'sendMessage'])->name('message');
+    Route::get('/conversation/{match}', [RoomieMatchController::class, 'conversation'])->name('conversation');
 });
 
 // Rutas de información académica
@@ -84,6 +88,7 @@ Route::prefix('academic')->name('academic.')->group(function () {
     Route::get('/', [AcademicInfoController::class, 'index'])->name('index');
     Route::get('/scholarships', [AcademicInfoController::class, 'scholarships'])->name('scholarships');
     Route::get('/cut-off-marks', [AcademicInfoController::class, 'cutOffMarks'])->name('cut-off-marks');
+    Route::get('/cut-off-calculator', [AcademicInfoController::class, 'calculator'])->name('calculator');
     Route::get('/search', [AcademicInfoController::class, 'search'])->name('search');
     
     // Rutas protegidas para preferencias académicas

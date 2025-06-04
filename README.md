@@ -29,6 +29,7 @@ Spandam es una plataforma web completa desarrollada en Laravel 11 que satisface 
 - Integración con Google Maps
 - Filtros por categoría, fecha y ubicación
 - Sistema de registro de asistencia
+- **NUEVO**: Zonas de ocio filtradas por universidad y ciudad, con posibilidad de añadir nuevas zonas, valoraciones y opiniones.
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -92,6 +93,11 @@ CREATE DATABASE spandam_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```bash
 php artisan migrate
 php artisan db:seed
+```
+
+### 7.1 Importar notas de corte reales
+```bash
+php artisan import:cutoff-marks
 ```
 
 ### 8. Configurar el almacenamiento

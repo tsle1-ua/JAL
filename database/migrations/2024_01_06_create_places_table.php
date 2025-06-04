@@ -8,27 +8,31 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('matches', function (Blueprint $table) {
+        Schema::create('places', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id_1')->constrained('users')->onDelete('cascade');
-            $table->foreignId('user_id_2')->constrained('users')->onDelete('cascade');
-            $table->enum('user_1_status', ['liked', 'disliked', 'pending'])->default('pending');
-            $table->enum('user_2_status', ['liked', 'disliked', 'pending'])->default('pending');
-            $table->timestamp('matched_at')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->text('description');
+            $table->string('address');
+            $table->string('city');
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
+            $table->string('category')->nullable();
+            $table->string('image_path')->nullable();
+            $table->boolean('is_verified')->default(false);
+            $table->decimal('rating', 3, 2)->default(0.00);
+            $table->integer('rating_count')->default(0);
             $table->timestamps();
 
-            // Asegurar que no haya duplicados para el mismo par de usuarios
-            $table->unique(['user_id_1', 'user_id_2']);
-            
             // Índices para optimización
-            $table->index(['user_id_1', 'user_1_status']);
-            $table->index(['user_id_2', 'user_2_status']);
-            $table->index(['matched_at']);
+            $table->index(['city', 'category']);
+            $table->index(['user_id']);
+            $table->index(['is_verified']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('matches');
+        Schema::dropIfExists('places');
     }
 };
