@@ -9,6 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ListingService
 {
@@ -76,7 +77,7 @@ class ListingService
 
     public function createListing(array $data, array $images = []): Listing
     {
-        return DB::transaction(function () use ($data, $images) {
+        $listing = DB::transaction(function () use ($data, $images) {
             // Asignar usuario actual
             $data['user_id'] = auth()->id();
 
@@ -96,11 +97,15 @@ class ListingService
 
             return $this->listingRepository->create($data);
         });
+
+        Cache::forget('listing.statistics');
+
+        return $listing;
     }
 
     public function updateListing(int $id, array $data, array $images = []): bool
     {
-        return DB::transaction(function () use ($id, $data, $images) {
+        $updated = DB::transaction(function () use ($id, $data, $images) {
             $listing = $this->listingRepository->findById($id);
             
             if (!$listing) {
@@ -133,11 +138,17 @@ class ListingService
 
             return $this->listingRepository->update($id, $data);
         });
+
+        if ($updated) {
+            Cache::forget('listing.statistics');
+        }
+
+        return $updated;
     }
 
     public function deleteListing(int $id): bool
     {
-        return DB::transaction(function () use ($id) {
+        $deleted = DB::transaction(function () use ($id) {
             $listing = $this->listingRepository->findById($id);
             
             if (!$listing) {
@@ -154,6 +165,12 @@ class ListingService
 
             return $this->listingRepository->delete($id);
         });
+
+        if ($deleted) {
+            Cache::forget('listing.statistics');
+        }
+
+        return $deleted;
     }
 
     public function toggleAvailability(int $id): bool
@@ -219,15 +236,17 @@ class ListingService
 
     public function getListingStatistics(): array
     {
-        $total = $this->listingRepository->getAll()->count();
-        $available = $this->listingRepository->getAvailable()->count();
-        $avgPrice = $this->listingRepository->getAvailable()->avg('price');
+        return Cache::remember('listing.statistics', 300, function () {
+            $total = $this->listingRepository->getAll()->count();
+            $available = $this->listingRepository->getAvailable()->count();
+            $avgPrice = $this->listingRepository->getAvailable()->avg('price');
 
-        return [
-            'total' => $total,
-            'available' => $available,
-            'occupied' => $total - $available,
-            'average_price' => round($avgPrice, 2),
-        ];
+            return [
+                'total' => $total,
+                'available' => $available,
+                'occupied' => $total - $available,
+                'average_price' => round($avgPrice, 2),
+            ];
+        });
     }
 }
