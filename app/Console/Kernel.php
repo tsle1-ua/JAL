@@ -10,7 +10,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        //
+        $schedule->command('messages:delete-old')->daily();
     }
 
     protected function commands(): void
