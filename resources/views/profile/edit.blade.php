@@ -76,9 +76,14 @@
             <input type="checkbox" name="looking_for_roommate" id="looking_for_roommate" class="form-check-input" value="1" {{ old('looking_for_roommate', $profile->looking_for_roommate) ? 'checked' : '' }}>
             <label class="form-check-label" for="looking_for_roommate">Busco compañero de piso</label>
         </div>
+        @if($profile->profile_image_url)
+            <div class="mb-3">
+                <img src="{{ $profile->profile_image_url }}" alt="Imagen actual" class="img-thumbnail mb-2" style="max-width: 200px;">
+            </div>
+        @endif
         <div class="mb-3">
-            <label class="form-label">Imagen de perfil</label>
-            <input type="file" name="profile_image" class="form-control">
+            <label class="form-label">Imagen de perfil (se recortará a 300x300)</label>
+            <input type="file" name="profile_image" accept="image/*" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>

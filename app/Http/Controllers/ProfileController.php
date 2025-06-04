@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProfileController extends Controller
 {
@@ -54,8 +56,13 @@ class ProfileController extends Controller
         }
 
         if ($request->hasFile('profile_image')) {
-            $path = $request->file('profile_image')->store('profiles', 'public');
-            $data['profile_image'] = $path;
+            $imageManager = new ImageManager(new Driver());
+            $image = $imageManager->read($request->file('profile_image')->getPathname())
+                ->cover(300, 300);
+
+            $filename = 'profiles/' . uniqid() . '.jpg';
+            Storage::disk('public')->put($filename, $image->toJpeg()->toString());
+            $data['profile_image'] = $filename;
         } else {
             unset($data['profile_image']);
         }
