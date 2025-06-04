@@ -28,6 +28,7 @@ Spandam es una plataforma web completa desarrollada en Laravel 11 que satisface 
 - Integración con Google Maps
 - Filtros por categoría, fecha y ubicación
 - Sistema de registro de asistencia
+- **NUEVO**: Zonas de ocio filtradas por universidad y ciudad, con posibilidad de añadir nuevas zonas, valoraciones y opiniones.
 
 ## 🛠️ Tecnologías Utilizadas
 
