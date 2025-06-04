@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Match extends Model
+class UserMatch extends Model
 {
     use HasFactory;
+
+    protected $table = 'matches';
 
     protected $fillable = [
         'user_id_1',
@@ -45,7 +47,7 @@ class Match extends Model
      */
     public function messages()
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class, 'match_id');
     }
 
     /**
@@ -106,19 +108,18 @@ class Match extends Model
     /**
      * Create or update a match between two users.
      */
-    public static function createOrUpdateMatch($user1Id, $user2Id, $status)
+    public static function createOrUpdateMatch($fromUserId, $toUserId, $status)
     {
         // Ensure consistent ordering (smaller ID first)
-        if ($user1Id > $user2Id) {
-            [$user1Id, $user2Id] = [$user2Id, $user1Id];
-        }
+        $ordered = [$fromUserId, $toUserId];
+        sort($ordered);
 
         $match = self::firstOrCreate([
-            'user_id_1' => $user1Id,
-            'user_id_2' => $user2Id,
+            'user_id_1' => $ordered[0],
+            'user_id_2' => $ordered[1],
         ]);
 
-        $match->updateStatusForUser($user1Id, $status);
+        $match->updateStatusForUser($fromUserId, $status);
 
         return $match;
     }
