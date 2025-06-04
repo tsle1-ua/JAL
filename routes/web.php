@@ -36,6 +36,15 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Documentación de la API con Swagger UI
+Route::get('/api/docs', function () {
+    return view('api-docs');
+})->name('api.docs');
+
+Route::get('/docs/api.yaml', function () {
+    return response()->file(base_path('docs/api.yaml'));
+})->name('api.docs.file');
+
 Route::get('/ocio', function () {
     $events = App\Models\Event::public()->upcoming()->get();
     $places = App\Models\Place::all();
