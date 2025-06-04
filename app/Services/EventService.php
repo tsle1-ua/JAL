@@ -23,6 +23,11 @@ class EventService
         return $this->eventRepository->getUpcoming();
     }
 
+    public function getTrendingEvents(int $limit = 5): Collection
+    {
+        return $this->eventRepository->getTrending($limit);
+    }
+
     public function getPaginatedEvents(int $perPage = 15)
     {
         return $this->eventRepository->getPaginated($perPage);

@@ -9,6 +9,7 @@ use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+use App\Services\EventService;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Página principal
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (EventService $eventService) {
+    $trendingEvents = $eventService->getTrendingEvents();
+    return view('welcome', compact('trendingEvents'));
 })->name('home');
 
 Route::get('/ocio', function () {

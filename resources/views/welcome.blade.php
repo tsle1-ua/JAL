@@ -27,4 +27,29 @@
         </div>
     </div>
 </div>
+
+@if(isset($trendingEvents) && $trendingEvents->count())
+<div class="bg-light py-5">
+    <div class="container">
+        <h2 class="mb-4 text-center">Eventos en Tendencia</h2>
+        <div class="row g-4">
+            @foreach($trendingEvents as $event)
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        @if($event->image_url)
+                            <img src="{{ $event->image_url }}" class="card-img-top" alt="{{ $event->title }}">
+                        @endif
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $event->title }}</h5>
+                            <p class="card-text">{{ $event->short_date }} - {{ $event->location }}</p>
+                            <p class="card-text"><small class="text-muted">{{ $event->current_attendees }} asistentes</small></p>
+                            <a href="{{ route('events.show', $event) }}" class="btn btn-primary">Ver más</a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
 @endsection

@@ -27,4 +27,9 @@ interface EventRepositoryInterface
     public function searchWithFilters(array $filters): Collection;
     
     public function getNearby(float $latitude, float $longitude, float $radius): Collection;
+
+    /**
+     * Get trending events ordered by attendee count.
+     */
+    public function getTrending(int $limit = 5): Collection;
 }

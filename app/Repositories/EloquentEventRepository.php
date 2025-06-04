@@ -103,4 +103,14 @@ class EloquentEventRepository implements EventRepositoryInterface
                    ->withinRadius($latitude, $longitude, $radius)
                    ->get();
     }
+
+    public function getTrending(int $limit = 5): Collection
+    {
+        return Event::with(['user', 'place'])
+                   ->public()
+                   ->upcoming()
+                   ->orderByDesc('current_attendees')
+                   ->take($limit)
+                   ->get();
+    }
 }
