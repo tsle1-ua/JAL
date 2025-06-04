@@ -93,6 +93,11 @@ php artisan migrate
 php artisan db:seed
 ```
 
+### 7.1 Importar notas de corte reales
+```bash
+php artisan import:cutoff-marks
+```
+
 ### 8. Configurar el almacenamiento
 ```bash
 php artisan storage:link

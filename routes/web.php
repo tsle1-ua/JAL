@@ -81,6 +81,7 @@ Route::prefix('academic')->name('academic.')->group(function () {
     Route::get('/', [AcademicInfoController::class, 'index'])->name('index');
     Route::get('/scholarships', [AcademicInfoController::class, 'scholarships'])->name('scholarships');
     Route::get('/cut-off-marks', [AcademicInfoController::class, 'cutOffMarks'])->name('cut-off-marks');
+    Route::get('/cut-off-calculator', [AcademicInfoController::class, 'calculator'])->name('calculator');
     Route::get('/search', [AcademicInfoController::class, 'search'])->name('search');
     
     // Rutas protegidas para preferencias académicas
