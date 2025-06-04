@@ -26,8 +26,9 @@ class ListingController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->only([
-            'city', 'type', 'min_price', 'max_price', 
-            'bedrooms', 'bathrooms', 'available_from', 'search'
+            'city', 'type', 'min_price', 'max_price',
+            'bedrooms', 'bathrooms', 'available_from', 'search',
+            'university', 'radius'
         ]);
 
         if (!empty(array_filter($filters))) {

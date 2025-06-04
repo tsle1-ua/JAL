@@ -9,6 +9,7 @@ Spandam es una plataforma web completa desarrollada en Laravel 11 que satisface 
 - Filtros avanzados por precio, ubicación, tipo de propiedad
 - Gestión de imágenes múltiples
 - Búsqueda por proximidad geográfica
+- Filtrado por ciudad y cercanía a tu universidad
 - Sistema de favoritos
 - Pagos mensuales automáticos para alquiler mediante domiciliación
 
