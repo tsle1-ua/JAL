@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: Spandam API
+  version: 1.0.0
+  description: API endpoints for listings and events.
+servers:
+  - url: /api
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+paths:
+  /login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Authentication token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '401':
+          description: Invalid credentials
+  /logout:
+    post:
+      summary: User logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out
+  /listings:
+    get:
+      summary: List listings
+      responses:
+        '200':
+          description: Paginated list of listings
+    post:
+      summary: Create listing
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+              required:
+                - title
+                - description
+      responses:
+        '201':
+          description: Listing created
+  /listings/{id}:
+    get:
+      summary: View listing
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Single listing
+    put:
+      summary: Update listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Listing updated
+    delete:
+      summary: Delete listing
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Listing deleted
+  /events:
+    get:
+      summary: List events
+      responses:
+        '200':
+          description: Paginated list of events
+    post:
+      summary: Create event
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+              required:
+                - title
+                - description
+      responses:
+        '201':
+          description: Event created
+  /events/{id}:
+    get:
+      summary: View event
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Single event
+    put:
+      summary: Update event
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Event updated
+    delete:
+      summary: Delete event
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Event deleted
