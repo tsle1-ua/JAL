@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Subscription;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -22,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'is_admin',
+        'role',
     ];
 
     /**
@@ -45,6 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'role' => 'string',
         ];
     }
 
@@ -94,6 +97,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function places()
     {
         return $this->hasMany(Place::class);
+    }
+
+    /**
+     * Get the user's subscriptions (automatic rent payments).
+     */
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
     }
 
     /**

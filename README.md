@@ -10,6 +10,7 @@ Spandam es una plataforma web completa desarrollada en Laravel 11 que satisface 
 - Gestión de imágenes múltiples
 - Búsqueda por proximidad geográfica
 - Sistema de favoritos
+- Pagos mensuales automáticos para alquiler mediante domiciliación
 
 ### 🎓 Información Académica
 - Consulta de notas de corte por universidad y carrera
@@ -210,6 +211,7 @@ php artisan test --coverage
 - `GET /listings/{id}` - Ver detalle
 - `PUT /listings/{id}` - Actualizar
 - `DELETE /listings/{id}` - Eliminar
+- `POST /subscriptions` - Activar pago mensual automático para un anuncio
 
 ### Eventos
 - `GET /events` - Listar eventos
