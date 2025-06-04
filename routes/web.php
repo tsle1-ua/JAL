@@ -7,6 +7,7 @@ use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeisureZoneController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::resource('listings', ListingController::class);
 Route::resource('events', EventController::class);
 Route::resource('places', PlaceController::class);
+Route::resource('leisure-zones', LeisureZoneController::class)->middleware(['auth', 'verified']);
 
 // Rutas del sistema RoomieMatch
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
