@@ -17,6 +17,7 @@
             <p><strong>Carrera:</strong> {{ $profile->major }}</p>
             <p><strong>Universidad:</strong> {{ $profile->university_name }}</p>
             <p><strong>Buscando compañero de piso:</strong> {{ $profile->looking_for_roommate ? 'Sí' : 'No' }}</p>
+            <p><strong>Último acceso:</strong> {{ optional(auth()->user()->last_login_at)->format('Y-m-d H:i') }}</p>
         </div>
     </div>
 </div>

@@ -50,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'role' => 'string',
+            'last_login_at' => 'datetime',
         ];
     }
 
