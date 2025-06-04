@@ -26,6 +26,13 @@
             </div>
             <input type="hidden" name="price_range" id="price_range" value="{{ request('price_range', '0,2000') }}">
         </div>
+        <div class="col-md-4">
+            <label class="form-label">Radio de búsqueda (km)</label>
+            <input type="range" class="form-range" min="1" max="50" name="radius" id="radius" value="{{ request('radius', 10) }}" oninput="radiusOutput.value = this.value">
+            <div class="text-end small">
+                <output id="radiusOutput">{{ request('radius', 10) }}</output> km
+            </div>
+        </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>

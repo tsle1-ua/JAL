@@ -28,8 +28,12 @@ class ListingController extends Controller
         $filters = $request->only([
             'city', 'type', 'min_price', 'max_price',
             'bedrooms', 'bathrooms', 'available_from', 'search',
-            'university', 'radius'
+            'university', 'radius', 'latitude', 'longitude'
         ]);
+
+        if (!isset($filters['radius'])) {
+            $filters['radius'] = 10;
+        }
 
         if ($request->filled('price_range')) {
             [$min, $max] = array_map('intval', explode(',', $request->input('price_range')));
@@ -56,8 +60,12 @@ class ListingController extends Controller
         $filters = $request->only([
             'city', 'type', 'min_price', 'max_price',
             'bedrooms', 'bathrooms', 'available_from', 'search',
-            'university', 'radius'
+            'university', 'radius', 'latitude', 'longitude'
         ]);
+
+        if (!isset($filters['radius'])) {
+            $filters['radius'] = 10;
+        }
 
         if ($request->filled('price_range')) {
             [$min, $max] = array_map('intval', explode(',', $request->input('price_range')));
