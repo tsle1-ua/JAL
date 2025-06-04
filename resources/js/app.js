@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const calendarEl = document.getElementById('calendar');
     const listEl = document.getElementById('event-list');
     const toggleBtn = document.getElementById('toggle-view');
+    const mapEl = document.getElementById('event-map');
 
     if (calendarEl) {
         const calendar = new Calendar(calendarEl, {
@@ -239,6 +240,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 calendarEl.classList.toggle('d-none');
                 toggleBtn.textContent = listEl.classList.contains('d-none') ? 'Ver lista' : 'Ver calendario';
             });
+        }
+    }
+
+    if (mapEl) {
+        window.initEventMap = function () {
+            const center = JSON.parse(mapEl.dataset.center);
+            const zoom = parseInt(mapEl.dataset.zoom, 10);
+            const map = new google.maps.Map(mapEl, { center, zoom });
+            const events = JSON.parse(mapEl.dataset.events);
+
+            events.forEach(evt => {
+                if (!evt.lat || !evt.lng) return;
+                const marker = new google.maps.Marker({
+                    position: { lat: parseFloat(evt.lat), lng: parseFloat(evt.lng) },
+                    map,
+                    title: evt.title
+                });
+                marker.addListener('click', () => {
+                    window.location.href = evt.url;
+                });
+            });
+        };
+
+        if (window.google && window.google.maps) {
+            window.initEventMap();
         }
     }
 });
