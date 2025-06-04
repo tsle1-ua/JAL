@@ -40,5 +40,6 @@
             </div>
         @endforeach
     </div>
+    {{ $listings->appends(request()->query())->links() }}
 </div>
 @endsection
