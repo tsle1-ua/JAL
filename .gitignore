@@ -26,3 +26,8 @@ yarn-error.log
 storage/logs/*
 bootstrap/cache/*
 !bootstrap/cache/.gitkeep
+!storage/app/.gitkeep
+!storage/framework/cache/.gitkeep
+!storage/framework/sessions/.gitkeep
+!storage/framework/views/.gitkeep
+!storage/logs/.gitkeep
