@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('events:notify-attendees')->daily();
         $schedule->command('listings:cleanup')->daily();
+        $schedule->command('log:clear')->daily();
         $schedule->call(function () {
             $events = Event::with('attendees')
                 ->whereDate('date', Carbon::tomorrow()->toDateString())
