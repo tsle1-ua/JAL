@@ -35,6 +35,25 @@
                             <a href="https://wa.me/{{ $listing->phone }}" target="_blank" class="btn btn-success w-100">WhatsApp</a>
                         </div>
                     @endif
+                    @auth
+                        @php
+                            $isFavorited = auth()->user()->favoriteListings->contains($listing->id);
+                        @endphp
+                        <div class="mt-3">
+                            @if($isFavorited)
+                                <form method="POST" action="{{ route('favorites.destroy', $listing) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger w-100">Quitar de favoritos</button>
+                                </form>
+                            @else
+                                <form method="POST" action="{{ route('favorites.store', $listing) }}">
+                                    @csrf
+                                    <button class="btn btn-outline-danger w-100">Añadir a favoritos</button>
+                                </form>
+                            @endif
+                        </div>
+                    @endauth
                 </div>
             </div>
         </div>

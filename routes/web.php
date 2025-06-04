@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
@@ -77,6 +78,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reservar visita a un alojamiento
     Route::post('/listings/{listing}/schedule-visit', [ListingController::class, 'scheduleVisit'])
         ->name('listings.schedule');
+
+    // Favoritos de alojamientos
+    Route::post('/listings/{listing}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/listings/{listing}/favorite', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 // Rutas de recursos principales (algunas públicas)
