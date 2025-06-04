@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Event;
 use App\Models\User;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
@@ -128,5 +129,26 @@ class EventTest extends TestCase
             'user_id' => $attendee->id,
         ]);
         $this->assertEquals(1, $event->fresh()->current_attendees);
+    }
+
+    public function test_event_can_have_multiple_tags(): void
+    {
+        $user = $this->createUser();
+        $tag1 = Tag::create(['name' => 'Music']);
+        $tag2 = Tag::create(['name' => 'Outdoor']);
+
+        $event = Event::create([
+            'title' => 'Tagged Event',
+            'description' => 'desc',
+            'date' => Carbon::now()->addDay(),
+            'category' => 'social',
+            'user_id' => $user->id,
+        ]);
+
+        $event->tags()->attach([$tag1->id, $tag2->id]);
+
+        $this->assertCount(2, $event->tags);
+        $this->assertTrue($event->tags->contains($tag1));
+        $this->assertTrue($event->tags->contains($tag2));
     }
 }
