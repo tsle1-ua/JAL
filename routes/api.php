@@ -5,9 +5,9 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ListingController as ApiListingController;
 use App\Http\Controllers\API\EventController as ApiEventController;
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('throttle:5,1')->post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('listings', ApiListingController::class)->except(['index', 'show']);
