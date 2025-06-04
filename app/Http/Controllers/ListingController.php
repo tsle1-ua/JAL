@@ -240,4 +240,29 @@ class ListingController extends Controller
 
         return back()->with('success', "Visita reservada para {$date} a las {$time}.");
     }
+
+    /**
+     * Get listing suggestions for autocomplete (AJAX).
+     */
+    public function suggest(Request $request): JsonResponse
+    {
+        $request->validate([
+            'q' => 'required|string|min:2',
+        ]);
+
+        $listings = $this->listingService
+            ->searchListings(['search' => $request->q])
+            ->take(5);
+
+        return response()->json([
+            'success' => true,
+            'listings' => $listings->map(function ($listing) {
+                return [
+                    'id' => $listing->id,
+                    'title' => $listing->title,
+                    'url' => route('listings.show', $listing),
+                ];
+            }),
+        ]);
+    }
 }

@@ -3,6 +3,10 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Eventos</h1>
+    <form method="GET" class="mb-4 position-relative">
+        <input type="text" name="search" id="event-search" value="{{ request('search') }}" class="form-control" placeholder="Buscar eventos...">
+        <div id="event-suggestions" class="list-group position-absolute w-100 d-none"></div>
+    </form>
     @auth
         <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Crear evento</a>
     @endauth

@@ -3,8 +3,8 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Alojamientos</h1>
-    <form method="GET" class="row g-3 mb-4">
-        <div class="col-md-4">
+    <form method="GET" class="row g-3 mb-4 position-relative">
+        <div class="col-md-3">
             <label class="form-label">Tipo</label>
             <select name="type" class="form-select" onchange="this.form.submit()">
                 <option value="">Todos</option>
@@ -12,11 +12,16 @@
                 <option value="residencia" {{ request('type')=='residencia' ? 'selected' : '' }}>Residencia</option>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label">Ciudad</label>
             <input type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad">
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-3 position-relative">
+            <label class="form-label">Buscar</label>
+            <input type="text" name="search" id="listing-search" value="{{ request('search') }}" class="form-control" placeholder="Buscar...">
+            <div id="listing-suggestions" class="list-group position-absolute w-100 d-none"></div>
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
     </form>

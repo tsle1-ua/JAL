@@ -248,6 +248,31 @@ class EventController extends Controller
     }
 
     /**
+     * Get event suggestions for autocomplete (AJAX).
+     */
+    public function suggest(Request $request): JsonResponse
+    {
+        $request->validate([
+            'q' => 'required|string|min:2',
+        ]);
+
+        $events = $this->eventService
+            ->searchEvents(['search' => $request->q])
+            ->take(5);
+
+        return response()->json([
+            'success' => true,
+            'events' => $events->map(function ($event) {
+                return [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'url' => route('events.show', $event),
+                ];
+            }),
+        ]);
+    }
+
+    /**
      * Get event statistics (AJAX).
      */
     public function statistics(): JsonResponse

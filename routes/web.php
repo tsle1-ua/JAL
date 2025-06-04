@@ -117,6 +117,10 @@ Route::get('/api/events/statistics', [EventController::class, 'statistics'])
 Route::get('/api/events/recommended', [EventController::class, 'recommended'])
     ->middleware('auth')
     ->name('api.events.recommended');
+Route::get('/api/listings/suggest', [ListingController::class, 'suggest'])
+    ->name('api.listings.suggest');
+Route::get('/api/events/suggest', [EventController::class, 'suggest'])
+    ->name('api.events.suggest');
 
 // Rutas de administración
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
