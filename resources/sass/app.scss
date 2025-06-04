@@ -3,6 +3,12 @@
 @import 'variables';
 @import 'bootstrap/scss/bootstrap';
 
+// Dark mode styles using custom variables
+body.dark-mode {
+    background-color: $dark-body-bg;
+    color: $dark-body-color;
+}
+
 // Skeleton loading placeholders
 .skeleton-card {
     .skeleton-image,
