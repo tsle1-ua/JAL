@@ -49,7 +49,16 @@ class ListingController extends Controller
 
         $statistics = $this->listingService->getListingStatistics();
 
-        return view('listings.index', compact('listings', 'statistics', 'filters'));
+        $mapListings = $listings->map(function ($listing) {
+            return [
+                'title' => $listing->title,
+                'url' => route('listings.show', $listing),
+                'lat' => $listing->latitude,
+                'lng' => $listing->longitude,
+            ];
+        });
+
+        return view('listings.index', compact('listings', 'statistics', 'filters', 'mapListings'));
     }
 
     /**
@@ -79,9 +88,19 @@ class ListingController extends Controller
             $listings = $this->listingService->getPaginatedListings();
         }
 
+        $mapListings = $listings->map(function ($listing) {
+            return [
+                'title' => $listing->title,
+                'url' => route('listings.show', $listing),
+                'lat' => $listing->latitude,
+                'lng' => $listing->longitude,
+            ];
+        });
+
         return response()->json([
             'html' => view('listings.partials.cards', ['listings' => $listings])->render(),
             'links' => $listings->appends($request->query())->links()->render(),
+            'listings' => $mapListings,
         ]);
     }
 

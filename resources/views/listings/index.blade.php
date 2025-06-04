@@ -36,7 +36,14 @@
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
+        <input type="hidden" name="latitude" id="latitude" value="{{ request('latitude') }}">
+        <input type="hidden" name="longitude" id="longitude" value="{{ request('longitude') }}">
     </form>
+
+    <div id="listings-map" class="mb-4" style="height: 400px"
+         data-listings='@json($mapListings)'
+         data-center='@json(config('services.google_maps.default_center'))'
+         data-zoom='{{ config('services.google_maps.default_zoom') }}'></div>
 
     <div id="listing-container" class="row">
         @include('listings.partials.cards', ['listings' => $listings])
@@ -57,4 +64,5 @@
     </div>
     <div id="load-more-sentinel"></div>
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&callback=initListingsMap" async defer></script>
 @endsection
