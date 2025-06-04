@@ -17,11 +17,23 @@
                 'url' => route('events.show', $event),
             ];
         });
+
+        $mapEvents = $events->map(function ($event) {
+            return [
+                'title' => $event->title,
+                'url' => route('events.show', $event),
+                'lat' => optional($event->place)->latitude,
+                'lng' => optional($event->place)->longitude,
+            ];
+        });
     @endphp
 
     <div class="mb-3">
         <button id="toggle-view" class="btn btn-secondary">Ver calendario</button>
     </div>
+    <div id="event-map" class="mb-4" style="height: 400px" data-events='@json($mapEvents)'
+         data-center='@json(config('services.google_maps.default_center'))'
+         data-zoom='{{ config('services.google_maps.default_zoom') }}'></div>
     <div id="event-list">
     @foreach($events as $event)
         <div class="card mb-3">
@@ -51,6 +63,7 @@
                 </div>
             </div>
         @endforeach
-    @endisset
+@endisset
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&callback=initEventMap" async defer></script>
 @endsection
