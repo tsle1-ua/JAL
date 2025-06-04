@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 use App\Models\Subscription;
+use App\Models\RoomMatch;
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -113,7 +114,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser1()
     {
-
+        return $this->hasMany(RoomMatch::class, 'user_id_1');
     }
 
     /**
@@ -121,7 +122,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser2()
     {
-
+        return $this->hasMany(RoomMatch::class, 'user_id_2');
     }
 
     /**
