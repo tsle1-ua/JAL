@@ -40,7 +40,12 @@ class EventController extends Controller
         $statistics = $this->eventService->getEventStatistics();
         $upcomingEvents = $this->eventService->getUpcomingEvents()->take(5);
 
-        return view('events.index', compact('events', 'statistics', 'upcomingEvents', 'filters'));
+        $recommendedEvents = collect();
+        if (auth()->check()) {
+            $recommendedEvents = $this->eventService->getRecommendedEvents(auth()->id());
+        }
+
+        return view('events.index', compact('events', 'statistics', 'upcomingEvents', 'filters', 'recommendedEvents'));
     }
 
     /**

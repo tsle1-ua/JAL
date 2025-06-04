@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
+use App\Models\User;
 use App\Repositories\EventRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -260,19 +261,34 @@ class EventService
 
     public function getRecommendedEvents(int $userId, int $limit = 5): Collection
     {
-        // Obtener eventos recomendados basados en el perfil del usuario
-        $user = auth()->user();
-        $profile = $user->profile;
-        
-        $query = $this->eventRepository->getUpcoming();
-        
-        // Si el usuario tiene universidad, priorizar eventos en esa ciudad
-        if ($profile && $profile->university_name) {
-            // Esto es una implementación simplificada
-            // En producción, se podría usar un algoritmo más sofisticado
-            return $query->take($limit);
+        // Obtener el usuario con sus relaciones necesarias
+        $user = User::with(['profile', 'attendingEvents', 'events'])->find($userId);
+        if (!$user) {
+            return collect();
         }
-        
-        return $query->take($limit);
+
+        // Categorías en las que el usuario ha mostrado interés
+        $preferredCategories = $user->attendingEvents->pluck('category_id')
+            ->merge($user->events->pluck('category_id'))
+            ->filter()
+            ->unique();
+
+        $query = Event::with(['user', 'place'])
+            ->public()
+            ->upcoming();
+
+        if ($preferredCategories->isNotEmpty()) {
+            $query->whereIn('category_id', $preferredCategories);
+        }
+
+        // Si el usuario tiene universidad, priorizar eventos en esa ciudad
+        if ($user->profile && $user->profile->university_name) {
+            $city = $user->profile->university_name;
+            $query->whereHas('place', function ($q) use ($city) {
+                $q->where('city', 'like', '%' . $city . '%');
+            });
+        }
+
+        return $query->orderBy('date')->take($limit)->get();
     }
 }
