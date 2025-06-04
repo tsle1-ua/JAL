@@ -51,6 +51,13 @@ Spandam es una plataforma web completa desarrollada en Laravel 11 que satisface 
 
 ## 🔧 Instalación
 
+### 🚀 Iniciar con Docker
+Si tienes Docker instalado, simplemente ejecuta:
+```bash
+docker-compose up
+```
+Esto levantará los servicios de PHP, Node y MySQL listos para desarrollar.
+
 ### 1. Clonar el repositorio
 ```bash
 git clone https://github.com/tu-usuario/spandam.git
