@@ -9,6 +9,7 @@ use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,15 @@ use Illuminate\Support\Facades\Route;
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
-|
 */
+
+Route::get('/locale/{locale}', function (string $locale) {
+    if (in_array($locale, ['en', 'es'])) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('locale.switch');
 
 // Página principal
 Route::get('/', function () {
@@ -180,6 +188,5 @@ Route::get('/terms', function () {
 Route::fallback(function () {
     return view('errors.404');
 });
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
