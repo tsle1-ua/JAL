@@ -9,6 +9,8 @@ class RoomMatch extends Model
 {
     use HasFactory;
 
+    protected $table = 'matches';
+
     protected $fillable = [
         'user_id_1',
         'user_id_2',

@@ -10,7 +10,10 @@ return new class extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->foreignId('category_id')->nullable()->after('user_id')->constrained()->onDelete('set null');
-            $table->dropColumn('category');
+            if (Schema::hasColumn('events', 'category')) {
+                $table->dropIndex(['category', 'is_public']);
+                $table->dropColumn('category');
+            }
             $table->index('category_id');
         });
     }
