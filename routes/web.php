@@ -63,6 +63,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('events.register');
     Route::delete('/events/{event}/unregister', [EventController::class, 'unregisterAttendance'])
         ->name('events.unregister');
+
+    // Reservar visita a un alojamiento
+    Route::post('/listings/{listing}/schedule-visit', [ListingController::class, 'scheduleVisit'])
+        ->name('listings.schedule');
 });
 
 // Rutas de recursos principales (algunas públicas)
