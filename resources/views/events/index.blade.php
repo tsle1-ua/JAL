@@ -28,6 +28,22 @@
         @endif
     @endauth
 
+    <form method="GET" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label class="form-label">Categorías</label>
+            <select name="categories[]" class="form-select" multiple>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" @selected(in_array($category->id, request('categories', [])))>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
     @php
         $calendarEvents = $events->map(function ($event) {
             return [

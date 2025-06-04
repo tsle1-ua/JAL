@@ -22,7 +22,7 @@ class EventController extends Controller
     public function index(Request $request): JsonResponse
     {
         $filters = $request->only([
-            'category', 'date', 'start_date', 'end_date',
+            'categories', 'category', 'date', 'start_date', 'end_date',
             'city', 'free', 'available_spots', 'search'
         ]);
 
