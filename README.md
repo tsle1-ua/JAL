@@ -239,6 +239,9 @@ Después de ejecutar los seeders, tendrás disponibles:
 - **Email**: maria@test.com | carlos@test.com | ana@test.com | david@test.com
 - **Password**: password
 
+### Datos de ejemplo
+- Se crean varios anuncios de alojamiento y eventos públicos para probar la aplicación en local.
+
 ## 📁 Estructura del Proyecto
 
 ```
