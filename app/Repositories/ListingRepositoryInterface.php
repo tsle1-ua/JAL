@@ -25,6 +25,8 @@ interface ListingRepositoryInterface
     public function getByUser(int $userId): Collection;
     
     public function searchWithFilters(array $filters): Collection;
+
+    public function searchWithFiltersPaginated(array $filters, int $perPage = 15): LengthAwarePaginator;
     
     public function getNearby(float $latitude, float $longitude, float $radius): Collection;
 }
