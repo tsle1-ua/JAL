@@ -8,8 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class ListingService
 {
@@ -183,22 +181,6 @@ class ListingService
 
     protected function geocodeAddress(string $address): ?array
     {
-        try {
-            $apiKey = config('services.google_maps.api_key');
-            if (!$apiKey) {
-                return null;
-            }
-
-            $response = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
-                'address' => $address,
-                'key' => $apiKey,
-            ]);
-
-            if ($response->ok()) {
-                $data = $response->json();
-                if (!empty($data['results'][0]['geometry']['location'])) {
-                    return $data['results'][0]['geometry']['location'];
-                }
             }
         } catch (\Throwable $e) {
             Log::error('Geocoding error: ' . $e->getMessage());
