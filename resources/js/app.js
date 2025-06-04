@@ -108,4 +108,36 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    const container = document.getElementById('listing-container');
+    const pagination = document.getElementById('pagination-links');
+    const sentinel = document.getElementById('load-more-sentinel');
+    if (container && pagination && sentinel) {
+        const observer = new IntersectionObserver(entries => {
+            if (entries.some(e => e.isIntersecting)) {
+                loadNextPage();
+            }
+        }, { rootMargin: '100px' });
+
+        observer.observe(sentinel);
+
+        async function loadNextPage() {
+            const nextLink = pagination.querySelector('a[rel="next"]');
+            if (!nextLink) {
+                observer.disconnect();
+                return;
+            }
+
+            const url = new URL(nextLink.href);
+            url.pathname = '/api/listings/cards';
+
+            try {
+                const response = await axios.get(url.toString(), { headers });
+                container.insertAdjacentHTML('beforeend', response.data.html);
+                pagination.innerHTML = response.data.links;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
 });

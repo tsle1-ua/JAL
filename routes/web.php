@@ -122,6 +122,8 @@ Route::middleware(['auth'])->group(function () {
 // Rutas AJAX para estadísticas
 Route::get('/api/listings/statistics', [ListingController::class, 'statistics'])
     ->name('api.listings.statistics');
+Route::get('/api/listings/cards', [ListingController::class, 'cards'])
+    ->name('api.listings.cards');
 Route::get('/api/events/statistics', [EventController::class, 'statistics'])
     ->name('api.events.statistics');
 Route::get('/api/events/recommended', [EventController::class, 'recommended'])

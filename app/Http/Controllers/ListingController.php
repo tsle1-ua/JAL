@@ -49,6 +49,35 @@ class ListingController extends Controller
     }
 
     /**
+     * Return listing cards as JSON for infinite scroll.
+     */
+    public function cards(Request $request): JsonResponse
+    {
+        $filters = $request->only([
+            'city', 'type', 'min_price', 'max_price',
+            'bedrooms', 'bathrooms', 'available_from', 'search',
+            'university', 'radius'
+        ]);
+
+        if ($request->filled('price_range')) {
+            [$min, $max] = array_map('intval', explode(',', $request->input('price_range')));
+            $filters['min_price'] = $min;
+            $filters['max_price'] = $max;
+        }
+
+        if (!empty(array_filter($filters))) {
+            $listings = $this->listingService->searchListingsPaginated($filters);
+        } else {
+            $listings = $this->listingService->getPaginatedListings();
+        }
+
+        return response()->json([
+            'html' => view('listings.partials.cards', ['listings' => $listings])->render(),
+            'links' => $listings->appends($request->query())->links()->render(),
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(): View
