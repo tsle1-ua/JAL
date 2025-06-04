@@ -1,5 +1,7 @@
 import 'bootstrap';
 import axios from 'axios';
+import noUiSlider from 'nouislider';
+import 'nouislider/dist/nouislider.min.css';
 
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -50,4 +52,31 @@ document.addEventListener('DOMContentLoaded', () => {
             processForm(e.target);
         }
     });
+
+    const priceSlider = document.getElementById('price-slider');
+    const priceInput = document.getElementById('price_range');
+    if (priceSlider && priceInput) {
+        const startValues = priceInput.value.split(',').map(v => parseInt(v, 10));
+        noUiSlider.create(priceSlider, {
+            start: startValues,
+            connect: true,
+            range: {
+                min: 0,
+                max: 2000
+            },
+            tooltips: [true, true],
+            format: {
+                to: value => Math.round(value),
+                from: value => Number(value)
+            }
+        });
+
+        const minEl = document.getElementById('price-slider-min');
+        const maxEl = document.getElementById('price-slider-max');
+        priceSlider.noUiSlider.on('update', (values) => {
+            priceInput.value = values.map(v => Math.round(v)).join(',');
+            if (minEl) minEl.textContent = Math.round(values[0]);
+            if (maxEl) maxEl.textContent = Math.round(values[1]);
+        });
+    }
 });

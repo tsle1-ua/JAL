@@ -16,6 +16,15 @@
             <label class="form-label">Ciudad</label>
             <input type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad">
         </div>
+        <div class="col-md-4">
+            <label class="form-label">Precio (€)</label>
+            <div id="price-slider"></div>
+            <div class="d-flex justify-content-between small">
+                <span id="price-slider-min"></span>
+                <span id="price-slider-max"></span>
+            </div>
+            <input type="hidden" name="price_range" id="price_range" value="{{ request('price_range', '0,2000') }}">
+        </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>
         </div>
