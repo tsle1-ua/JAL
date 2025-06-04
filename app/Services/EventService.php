@@ -184,12 +184,12 @@ class EventService
 
     protected function uploadImage(UploadedFile $image): string
     {
-        return $image->store('events', 'public');
+        return $image->store('events', 's3');
     }
 
     protected function deleteImage(string $imagePath): void
     {
-        Storage::disk('public')->delete($imagePath);
+        Storage::disk('s3')->delete($imagePath);
     }
 
     protected function processEventDates(array $data): array

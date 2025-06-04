@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Profile extends Model
 {
@@ -49,7 +50,7 @@ class Profile extends Model
      */
     public function getProfileImageUrlAttribute(): ?string
     {
-        return $this->profile_image ? asset('storage/' . $this->profile_image) : null;
+        return $this->profile_image ? Storage::disk('s3')->url($this->profile_image) : null;
     }
 
     /**

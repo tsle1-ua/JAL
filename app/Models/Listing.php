@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Storage;
 
 class Listing extends Model
 {
@@ -72,7 +73,7 @@ class Listing extends Model
     public function getFirstImageUrlAttribute(): ?string
     {
         if ($this->image_paths && count($this->image_paths) > 0) {
-            return asset('storage/' . $this->image_paths[0]);
+            return Storage::disk('s3')->url($this->image_paths[0]);
         }
         return null;
     }
@@ -87,7 +88,7 @@ class Listing extends Model
         }
 
         return array_map(function ($path) {
-            return asset('storage/' . $path);
+            return Storage::disk('s3')->url($path);
         }, $this->image_paths);
     }
 

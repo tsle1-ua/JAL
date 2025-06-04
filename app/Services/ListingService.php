@@ -164,7 +164,7 @@ class ListingService
 
         foreach ($images as $image) {
             if ($image instanceof UploadedFile) {
-                $path = $image->store('listings', 'public');
+                $path = $image->store('listings', 's3');
                 $uploadedPaths[] = $path;
             }
         }
@@ -175,7 +175,7 @@ class ListingService
     protected function deleteImages(array $imagePaths): void
     {
         foreach ($imagePaths as $path) {
-            Storage::disk('public')->delete($path);
+            Storage::disk('s3')->delete($path);
         }
     }
 

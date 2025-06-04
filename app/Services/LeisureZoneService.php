@@ -98,11 +98,11 @@ class LeisureZoneService
 
     protected function uploadImage(UploadedFile $image): string
     {
-        return $image->store('leisure_zones', 'public');
+        return $image->store('leisure_zones', 's3');
     }
 
     protected function deleteImage(string $imagePath): void
     {
-        Storage::disk('public')->delete($imagePath);
+        Storage::disk('s3')->delete($imagePath);
     }
 }
