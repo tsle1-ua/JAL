@@ -47,6 +47,10 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'fcm' => [
+        'server_key' => env('FCM_SERVER_KEY'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Spandam Services Configuration

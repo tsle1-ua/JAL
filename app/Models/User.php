@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 use App\Models\Subscription;
 use App\Models\RoomMatch;
+use App\Models\Category;
 
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -27,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'is_admin',
         'role',
+        'fcm_token',
     ];
 
     /**
@@ -119,6 +121,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function favoriteListings()
     {
         return $this->belongsToMany(Listing::class, 'favorites')->withTimestamps();
+    }
+
+    /**
+     * Categories followed by the user.
+     */
+    public function followedCategories()
+    {
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
 
     /**

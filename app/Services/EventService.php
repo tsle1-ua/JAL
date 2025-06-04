@@ -11,6 +11,8 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewEventInFollowedCategoryNotification;
 
 class EventService
 {
@@ -74,6 +76,8 @@ class EventService
         });
 
         Cache::forget('event.statistics');
+
+        $this->notifyFollowers($event);
 
         return $event;
     }
@@ -291,5 +295,19 @@ class EventService
         }
 
         return $query->orderBy('date')->take($limit)->get();
+    }
+
+    protected function notifyFollowers(Event $event): void
+    {
+        if (!$event->category) {
+            return;
+        }
+
+        $followers = $event->category->followers()->whereNotNull('fcm_token')->get();
+
+        Notification::send(
+            $followers,
+            new NewEventInFollowedCategoryNotification($event)
+        );
     }
 }
