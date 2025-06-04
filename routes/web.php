@@ -9,6 +9,7 @@ use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -175,6 +176,9 @@ Route::get('/privacy', function () {
 Route::get('/terms', function () {
     return view('legal.terms');
 })->name('terms');
+
+// Sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // Fallback para rutas no encontradas
 Route::fallback(function () {
