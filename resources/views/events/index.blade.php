@@ -9,6 +9,25 @@
         <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Crear evento</a>
     @endauth
 
+    @auth
+        @if(isset($recommendedEvents) && $recommendedEvents->isNotEmpty())
+            <div class="mb-4">
+                <h2 class="mb-3 text-primary">Recomendados para ti</h2>
+                @foreach($recommendedEvents as $event)
+                    <div class="card mb-2 border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $event->title }}</h5>
+                            <p class="card-text">
+                                <small class="text-muted">{{ $event->formatted_date_time }} - {{ $event->location }}</small>
+                            </p>
+                            <a href="{{ route('events.show', $event) }}" class="btn btn-primary">Ver</a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    @endauth
+
     @php
         $calendarEvents = $events->map(function ($event) {
             return [
