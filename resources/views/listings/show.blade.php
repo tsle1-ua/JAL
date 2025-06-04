@@ -12,6 +12,20 @@
             <p>{{ $listing->formatted_price }} - {{ $listing->square_meters ?? '?' }} m²</p>
             <p>Baños: {{ $listing->bathrooms }} | Habitaciones: {{ $listing->bedrooms }}</p>
             <p>Ocupantes: {!! $listing->occupant_icons !!} ({{ $listing->current_occupants }}/{{ $listing->max_occupants ?? 'N/A' }})</p>
+            @auth
+                @if(auth()->user()->favoriteListings->contains($listing->id))
+                    <form method="POST" action="{{ route('listings.unfavorite', $listing) }}" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-warning btn-sm">Quitar de favoritos</button>
+                    </form>
+                @else
+                    <form method="POST" action="{{ route('listings.favorite', $listing) }}" class="d-inline">
+                        @csrf
+                        <button class="btn btn-outline-warning btn-sm">Añadir a favoritos</button>
+                    </form>
+                @endif
+            @endauth
         </div>
         <div class="col-md-4">
             <div class="card">

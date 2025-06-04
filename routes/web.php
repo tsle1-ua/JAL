@@ -68,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reservar visita a un alojamiento
     Route::post('/listings/{listing}/schedule-visit', [ListingController::class, 'scheduleVisit'])
         ->name('listings.schedule');
+
+    // Favoritos
+    Route::post('/listings/{listing}/favorite', [ListingController::class, 'favorite'])
+        ->name('listings.favorite');
+    Route::delete('/listings/{listing}/favorite', [ListingController::class, 'unfavorite'])
+        ->name('listings.unfavorite');
 });
 
 // Rutas de recursos principales (algunas públicas)

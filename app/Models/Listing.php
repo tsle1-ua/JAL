@@ -67,6 +67,14 @@ class Listing extends Model
     }
 
     /**
+     * Users who favorited this listing.
+     */
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
+    /**
      * Get the first image URL.
      */
     public function getFirstImageUrlAttribute(): ?string

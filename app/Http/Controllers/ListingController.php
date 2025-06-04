@@ -240,4 +240,36 @@ class ListingController extends Controller
 
         return back()->with('success', "Visita reservada para {$date} a las {$time}.");
     }
+
+    /**
+     * Mark a listing as favorite for the authenticated user.
+     */
+    public function favorite(int $id): RedirectResponse
+    {
+        $listing = $this->listingService->findListing($id);
+
+        if (!$listing) {
+            abort(404);
+        }
+
+        auth()->user()->favoriteListings()->syncWithoutDetaching([$listing->id]);
+
+        return back()->with('success', 'Añadido a favoritos.');
+    }
+
+    /**
+     * Remove a listing from user favorites.
+     */
+    public function unfavorite(int $id): RedirectResponse
+    {
+        $listing = $this->listingService->findListing($id);
+
+        if (!$listing) {
+            abort(404);
+        }
+
+        auth()->user()->favoriteListings()->detach($listing->id);
+
+        return back()->with('success', 'Eliminado de favoritos.');
+    }
 }

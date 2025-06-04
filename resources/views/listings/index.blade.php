@@ -34,7 +34,21 @@
                         <p class="card-text">
                             {!! $listing->occupant_icons !!}
                         </p>
-                        <a href="{{ route('listings.show', $listing) }}" class="btn btn-sm btn-outline-primary">Ver más</a>
+                        <a href="{{ route('listings.show', $listing) }}" class="btn btn-sm btn-outline-primary me-2">Ver más</a>
+                        @auth
+                            @if(auth()->user()->favoriteListings->contains($listing->id))
+                                <form method="POST" action="{{ route('listings.unfavorite', $listing) }}" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-warning">Quitar</button>
+                                </form>
+                            @else
+                                <form method="POST" action="{{ route('listings.favorite', $listing) }}" class="d-inline">
+                                    @csrf
+                                    <button class="btn btn-sm btn-outline-warning">Fav</button>
+                                </form>
+                            @endif
+                        @endauth
                     </div>
                 </div>
             </div>
