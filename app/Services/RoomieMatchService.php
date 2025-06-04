@@ -77,16 +77,20 @@ class RoomieMatchService
         });
     }
 
-    public function dislikeUser(int $fromUserId, int $toUserId): bool
+    public function dislikeUser(int $fromUserId, int $toUserId): array
     {
         return DB::transaction(function () use ($fromUserId, $toUserId) {
             if ($fromUserId == $toUserId) {
                 throw new \Exception('No puedes rechazarte a ti mismo.');
             }
 
-            UserMatch::createOrUpdateMatch($fromUserId, $toUserId, 'disliked');
+            $match = UserMatch::createOrUpdateMatch($fromUserId, $toUserId, 'disliked');
 
-            return true;
+            return [
+                'success' => true,
+                'match_id' => $match->id,
+                'message' => 'Dislike enviado correctamente.',
+            ];
         });
     }
 
