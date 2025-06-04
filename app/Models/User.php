@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Subscription;
+use App\Models\Match as MatchModel;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -112,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser1()
     {
-        return $this->hasMany(Match::class, 'user_id_1');
+        return $this->hasMany(MatchModel::class, 'user_id_1');
     }
 
     /**
@@ -120,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser2()
     {
-        return $this->hasMany(Match::class, 'user_id_2');
+        return $this->hasMany(MatchModel::class, 'user_id_2');
     }
 
     /**

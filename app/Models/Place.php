@@ -121,14 +121,16 @@ class Place extends Model
      */
     public function scopeWithinRadius($query, $latitude, $longitude, $radius)
     {
-        return $query->selectRaw('*, 
-            ( 6371 * acos( cos( radians(?) ) * 
-            cos( radians( latitude ) ) * 
-            cos( radians( longitude ) - radians(?) ) + 
-            sin( radians(?) ) * 
-            sin( radians( latitude ) ) ) ) AS distance', 
+        return $query->selectRaw('*,
+            ( 6371 * acos( cos( radians(?) ) *
+            cos( radians( latitude ) ) *
+            cos( radians( longitude ) - radians(?) ) +
+            sin( radians(?) ) *
+            sin( radians( latitude ) ) ) ) AS distance',
             [$latitude, $longitude, $latitude])
-            ->having('distance', '<', $radius)
+            ->whereRaw('( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) < ?', [
+                $latitude, $longitude, $latitude, $radius
+            ])
             ->orderBy('distance');
     }
 
