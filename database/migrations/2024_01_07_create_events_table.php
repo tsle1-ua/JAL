@@ -30,7 +30,9 @@ return new class extends Migration
 
             // Índices para optimización
             $table->index(['date', 'is_public']);
+            $table->index('date');
             $table->index(['category', 'is_public']);
+            $table->index('category');
             $table->index(['user_id']);
             $table->index(['place_id']);
         });
