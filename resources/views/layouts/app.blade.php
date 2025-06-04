@@ -34,7 +34,15 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('listings.index') }}">Alojamientos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('events.index') }}">Eventos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('roomie.index') }}">Roomie Match</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -59,6 +67,10 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('listings.my') }}">Mis anuncios</a>
+                                    <a class="dropdown-item" href="{{ route('events.my') }}">Mis eventos</a>
+                                    <a class="dropdown-item" href="{{ route('profile.show') }}">Perfil</a>
+                                    <hr class="dropdown-divider">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
