@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -146,6 +147,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
             'edit' => 'admin.academic-info.edit',
             'update' => 'admin.academic-info.update',
             'destroy' => 'admin.academic-info.destroy',
+        ]
+    ]);
+
+    // Gestión de categorías
+    Route::resource('categories', AdminCategoryController::class, [
+        'names' => [
+            'index' => 'admin.categories.index',
+            'create' => 'admin.categories.create',
+            'store' => 'admin.categories.store',
+            'show' => 'admin.categories.show',
+            'edit' => 'admin.categories.edit',
+            'update' => 'admin.categories.update',
+            'destroy' => 'admin.categories.destroy',
         ]
     ]);
 });

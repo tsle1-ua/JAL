@@ -210,11 +210,11 @@ class EventService
 
     public function getEventsByCategory(): array
     {
-        $events = $this->eventRepository->getUpcoming();
-        
-        return $events->groupBy('category')->map(function ($categoryEvents) {
-            return $categoryEvents->count();
-        })->toArray();
+        $events = $this->eventRepository->getUpcoming()->load('category');
+
+        return $events->groupBy(fn ($e) => $e->category?->name)
+            ->map(fn ($categoryEvents) => $categoryEvents->count())
+            ->toArray();
     }
 
     public function getEventStatistics(): array

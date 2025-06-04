@@ -82,7 +82,7 @@ class EventController extends Controller
 
         // Obtener eventos relacionados (misma categoría o fecha similar)
         $relatedEvents = $this->eventService->searchEvents([
-            'category' => $event->category,
+            'category' => $event->category_id,
         ])->where('id', '!=', $event->id)->take(3);
 
         return view('events.show', compact('event', 'relatedEvents'));
@@ -235,7 +235,7 @@ class EventController extends Controller
                     'id' => $event->id,
                     'title' => $event->title,
                     'date' => $event->formatted_date_time,
-                    'category' => $event->category,
+                    'category' => $event->category?->name,
                     'price' => $event->formatted_price,
                     'location' => $event->location,
                     'image_url' => $event->image_url,
@@ -278,7 +278,7 @@ class EventController extends Controller
                     'id' => $event->id,
                     'title' => $event->title,
                     'date' => $event->formatted_date_time,
-                    'category' => $event->category,
+                    'category' => $event->category?->name,
                     'location' => $event->location,
                     'url' => route('events.show', $event),
                 ];
