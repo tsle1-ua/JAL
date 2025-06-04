@@ -7,6 +7,7 @@ use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,6 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::resource('listings', ListingController::class);
 Route::resource('events', EventController::class);
 Route::resource('places', PlaceController::class);
+Route::post('/listings/{listing}/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
+Route::get('/listings/{listing}/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');
 
 // Rutas del sistema RoomieMatch
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
