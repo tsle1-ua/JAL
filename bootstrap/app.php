@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withProviders([
+        \App\Providers\RepositoryServiceProvider::class,
+    ])
     ->withMiddleware(function (Middleware $middleware) {
         // Middleware aliases
         $middleware->alias([
@@ -21,15 +24,5 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
 
-        // Add locale switching for the web interface
-        $middleware->appendToGroup('web', \App\Http\Middleware\SetLocale::class);
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->respond(function (Response $response) {
-            if ($response->getStatusCode() >= 500) {
-                return response()->view('errors.500', status: 500);
-            }
 
-            return $response;
-        });
     })->create();

@@ -287,4 +287,14 @@ class EventController extends Controller
             }),
         ]);
     }
+
+    /**
+     * Return public upcoming events as JSON for API clients.
+     */
+    public function apiIndex(): JsonResponse
+    {
+        $events = $this->eventService->getUpcomingEvents();
+
+        return response()->json(['events' => $events]);
+    }
 }
