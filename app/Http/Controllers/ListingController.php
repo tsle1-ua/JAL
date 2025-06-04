@@ -31,6 +31,12 @@ class ListingController extends Controller
             'university', 'radius'
         ]);
 
+        if ($request->filled('price_range')) {
+            [$min, $max] = array_map('intval', explode(',', $request->input('price_range')));
+            $filters['min_price'] = $min;
+            $filters['max_price'] = $max;
+        }
+
         if (!empty(array_filter($filters))) {
             $listings = $this->listingService->searchListingsPaginated($filters);
         } else {
