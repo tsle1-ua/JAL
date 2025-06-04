@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 
 use App\Models\Profile;
+use App\Models\UserMatch;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class RoomieMatchService
         }
 
         // Obtener usuarios que ya han sido evaluados (liked o disliked)
-
+        $evaluatedUserIds = UserMatch::where(function ($query) use ($userId) {
             $query->where('user_id_1', $userId)->whereIn('user_1_status', ['liked', 'disliked']);
         })->orWhere(function ($query) use ($userId) {
             $query->where('user_id_2', $userId)->whereIn('user_2_status', ['liked', 'disliked']);
@@ -57,7 +58,7 @@ class RoomieMatchService
             }
 
             // Crear o actualizar el match
-
+            $match = UserMatch::createOrUpdateMatch($fromUserId, $toUserId, 'liked');
 
             $result = [
                 'success' => true,
@@ -83,6 +84,7 @@ class RoomieMatchService
                 throw new \Exception('No puedes rechazarte a ti mismo.');
             }
 
+            UserMatch::createOrUpdateMatch($fromUserId, $toUserId, 'disliked');
 
             return true;
         });
@@ -90,8 +92,9 @@ class RoomieMatchService
 
     public function getMutualMatches(int $userId): Collection
     {
-
+        $matches = UserMatch::query()
             ->forUser($userId)
+            ->mutualMatches()
             ->with(['user1.profile', 'user2.profile'])
             ->orderBy('matched_at', 'desc')
             ->get();
@@ -107,7 +110,7 @@ class RoomieMatchService
     public function getPendingLikes(int $userId): Collection
     {
         // Usuarios que han dado like a este usuario pero aún no han recibido respuesta
-
+        $pendingMatches = UserMatch::where('user_id_2', $userId)
             ->where('user_2_status', 'pending')
             ->where('user_1_status', 'liked')
             ->with(['user1.profile'])
@@ -122,7 +125,8 @@ class RoomieMatchService
 
     public function getMatchHistory(int $userId): array
     {
-
+        $allMatches = UserMatch::query()
+            ->forUser($userId)
             ->with(['user1.profile', 'user2.profile'])
             ->get();
 

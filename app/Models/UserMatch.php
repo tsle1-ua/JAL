@@ -9,6 +9,8 @@ class UserMatch extends Model
 {
     use HasFactory;
 
+    protected $table = 'matches';
+
 
     protected $fillable = [
         'user_id_1',
@@ -46,7 +48,7 @@ class UserMatch extends Model
      */
     public function messages()
     {
-
+        return $this->hasMany(Message::class);
     }
 
     /**
@@ -107,7 +109,24 @@ class UserMatch extends Model
     /**
      * Create or update a match between two users.
      */
+    public static function createOrUpdateMatch($user1Id, $user2Id, $status)
+    {
+        // Keep track of the acting user
+        $actingUserId = $user1Id;
 
+        // Ensure consistent ordering (smaller ID first)
+        if ($user1Id > $user2Id) {
+            [$user1Id, $user2Id] = [$user2Id, $user1Id];
+        }
+
+        // Find existing match or create a new one
+        $match = self::firstOrCreate([
+            'user_id_1' => $user1Id,
+            'user_id_2' => $user2Id,
+        ]);
+
+        // Update the status for the acting user
+        $match->updateStatusForUser($actingUserId, $status);
 
         return $match;
     }

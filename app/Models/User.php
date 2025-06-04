@@ -12,7 +12,7 @@ use App\Models\Subscription;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.

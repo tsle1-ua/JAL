@@ -22,7 +22,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-
+            if (Schema::hasColumn('users', 'is_admin')) {
+                $table->dropColumn('is_admin');
+            }
+            if (Schema::hasColumn('users', 'email_verified_at')) {
+                $table->dropColumn('email_verified_at');
             }
         });
     }
