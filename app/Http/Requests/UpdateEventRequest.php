@@ -104,5 +104,12 @@ class UpdateEventRequest extends FormRequest
                 'price' => 0,
             ]);
         }
+
+        // Sanitize the description to avoid XSS
+        if ($this->has('description')) {
+            $this->merge([
+                'description' => strip_tags($this->input('description')),
+            ]);
+        }
     }
 }
