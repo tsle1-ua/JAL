@@ -131,6 +131,75 @@ class EventTest extends TestCase
         $this->assertEquals(1, $event->fresh()->current_attendees);
     }
 
+    public function test_registration_fails_when_event_capacity_reached(): void
+    {
+        $owner = $this->createUser();
+        $firstAttendee = User::create([
+            'name' => 'Attendee 1',
+            'email' => 'first@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+        $secondAttendee = User::create([
+            'name' => 'Attendee 2',
+            'email' => 'second@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+
+        $event = Event::create([
+            'title' => 'Limited',
+            'description' => 'desc',
+            'date' => Carbon::now()->addDay(),
+            'category' => 'social',
+            'user_id' => $owner->id,
+            'max_attendees' => 1,
+        ]);
+
+        $service = app(\App\Services\EventService::class);
+
+        $this->actingAs($firstAttendee);
+        $this->assertTrue($service->registerAttendance($event->id));
+        $this->assertEquals(1, $event->fresh()->current_attendees);
+
+        $this->actingAs($secondAttendee);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No hay cupos disponibles para este evento.');
+        $service->registerAttendance($event->id);
+        $this->assertEquals(1, $event->fresh()->current_attendees);
+    }
+
+    public function test_user_cannot_register_twice_for_same_event(): void
+    {
+        $owner = $this->createUser();
+        $attendee = User::create([
+            'name' => 'Repeat',
+            'email' => 'repeat@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+
+        $event = Event::create([
+            'title' => 'Repeatable',
+            'description' => 'desc',
+            'date' => Carbon::now()->addDay(),
+            'category' => 'social',
+            'user_id' => $owner->id,
+            'max_attendees' => 2,
+        ]);
+
+        $service = app(\App\Services\EventService::class);
+
+        $this->actingAs($attendee);
+        $this->assertTrue($service->registerAttendance($event->id));
+        $this->assertEquals(1, $event->fresh()->current_attendees);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Ya estás registrado en este evento.');
+        $service->registerAttendance($event->id);
+        $this->assertEquals(1, $event->fresh()->current_attendees);
+    }
+
     public function test_event_can_have_multiple_tags(): void
     {
         $user = $this->createUser();
