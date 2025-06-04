@@ -9,6 +9,28 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    @php
+        use Illuminate\Support\Str;
+    @endphp
+
+    @if(isset($listing))
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{{ $listing->title }} | {{ config('app.name') }}" />
+        <meta property="og:description" content="{{ $listing->short_description }}" />
+        <meta property="og:url" content="{{ route('listings.show', $listing) }}" />
+        @if($listing->first_image_url)
+            <meta property="og:image" content="{{ $listing->first_image_url }}" />
+        @endif
+    @elseif(isset($event))
+        <meta property="og:type" content="event" />
+        <meta property="og:title" content="{{ $event->title }} | {{ config('app.name') }}" />
+        <meta property="og:description" content="{{ Str::limit($event->description, 150) }}" />
+        <meta property="og:url" content="{{ route('events.show', $event) }}" />
+        @if($event->image_url)
+            <meta property="og:image" content="{{ $event->image_url }}" />
+        @endif
+    @endif
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
