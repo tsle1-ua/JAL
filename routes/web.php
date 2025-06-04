@@ -178,7 +178,7 @@ Route::get('/terms', function () {
 
 // Fallback para rutas no encontradas
 Route::fallback(function () {
-    return view('errors.404');
+    return response()->view('errors.404', [], 404);
 });
 Auth::routes();
 
