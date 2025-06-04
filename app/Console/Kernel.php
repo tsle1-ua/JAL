@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('events:notify-attendees')->daily();
+        $schedule->command('listings:cleanup')->daily();
     }
 
     protected function commands(): void
