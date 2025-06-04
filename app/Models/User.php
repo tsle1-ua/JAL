@@ -6,13 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
+
 use App\Models\Subscription;
+
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.
@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser1()
     {
-        return $this->hasMany(Match::class, 'user_id_1');
+
     }
 
     /**
@@ -121,7 +121,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function matchesAsUser2()
     {
-        return $this->hasMany(Match::class, 'user_id_2');
+
     }
 
     /**

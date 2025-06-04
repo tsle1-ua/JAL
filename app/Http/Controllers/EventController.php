@@ -32,7 +32,7 @@ class EventController extends Controller
         ]);
 
         if (!empty(array_filter($filters))) {
-            $events = $this->eventService->searchEvents($filters);
+            $events = $this->eventService->searchEventsPaginated($filters);
         } else {
             $events = $this->eventService->getPaginatedEvents();
         }
@@ -82,7 +82,7 @@ class EventController extends Controller
 
         // Obtener eventos relacionados (misma categoría o fecha similar)
         $relatedEvents = $this->eventService->searchEvents([
-            'category' => $event->category,
+            'category' => $event->category_id,
         ])->where('id', '!=', $event->id)->take(3);
 
         return view('events.show', compact('event', 'relatedEvents'));
@@ -94,7 +94,7 @@ class EventController extends Controller
     public function edit(int $id): View
     {
         $event = $this->eventService->findEvent($id);
-        
+
         if (!$event) {
             abort(404, 'Evento no encontrado.');
         }
@@ -104,7 +104,9 @@ class EventController extends Controller
             abort(403, 'No tienes permisos para editar este evento.');
         }
 
-        return view('events.edit', compact('event'));
+        $places = Place::all();
+
+        return view('events.edit', compact('event', 'places'));
     }
 
     /**
@@ -235,7 +237,7 @@ class EventController extends Controller
                     'id' => $event->id,
                     'title' => $event->title,
                     'date' => $event->formatted_date_time,
-                    'category' => $event->category,
+                    'category' => $event->category?->name,
                     'price' => $event->formatted_price,
                     'location' => $event->location,
                     'image_url' => $event->image_url,
@@ -278,7 +280,7 @@ class EventController extends Controller
                     'id' => $event->id,
                     'title' => $event->title,
                     'date' => $event->formatted_date_time,
-                    'category' => $event->category,
+                    'category' => $event->category?->name,
                     'location' => $event->location,
                     'url' => route('events.show', $event),
                 ];

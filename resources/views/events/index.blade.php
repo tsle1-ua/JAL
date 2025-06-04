@@ -19,6 +19,7 @@
             </div>
         </div>
     @endforeach
+    {{ $events->appends(request()->query())->links() }}
 
     @isset($places)
         <hr>

@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('places', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('address');
-            $table->string('city');
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
-            $table->timestamps();
-            $table->index('city');
-        });
+        if (!Schema::hasTable('places')) {
+            Schema::create('places', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->text('description')->nullable();
+                $table->string('address');
+                $table->string('city');
+                $table->decimal('latitude', 10, 7)->nullable();
+                $table->decimal('longitude', 10, 7)->nullable();
+                $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+                $table->timestamps();
+                $table->index('city');
+            });
+        }
     }
 
     /**
