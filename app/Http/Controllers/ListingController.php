@@ -32,7 +32,7 @@ class ListingController extends Controller
         ]);
 
         if (!empty(array_filter($filters))) {
-            $listings = $this->listingService->searchListings($filters);
+            $listings = $this->listingService->searchListingsPaginated($filters);
         } else {
             $listings = $this->listingService->getPaginatedListings();
         }

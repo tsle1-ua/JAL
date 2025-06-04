@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-light py-5">
-    <div class="container">
-        <h1 class="mb-4">{{ __('Dashboard') }}</h1>
+<div class="bg-gray-100 py-10">
+    <div class="max-w-7xl mx-auto px-4">
+        <h1 class="text-2xl font-semibold mb-4">{{ __('Dashboard') }}</h1>
         @if (session('status'))
-            <div class="alert alert-success" role="alert">
+            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
                 {{ session('status') }}
             </div>
         @endif
-        <p class="lead">{{ __('You are logged in!') }}</p>
+
     </div>
 </div>
 @endsection

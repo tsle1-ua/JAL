@@ -5,9 +5,11 @@ namespace App\Services;
 use App\Models\Event;
 use App\Repositories\EventRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class EventService
 {
@@ -43,6 +45,11 @@ class EventService
         return $this->eventRepository->searchWithFilters($filters);
     }
 
+    public function searchEventsPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->eventRepository->searchWithFiltersPaginated($filters, $perPage);
+    }
+
     public function getNearbyEvents(float $latitude, float $longitude, float $radius = 10): Collection
     {
         return $this->eventRepository->getNearby($latitude, $longitude, $radius);
@@ -50,7 +57,7 @@ class EventService
 
     public function createEvent(array $data, ?UploadedFile $image = null): Event
     {
-        return DB::transaction(function () use ($data, $image) {
+        $event = DB::transaction(function () use ($data, $image) {
             // Asignar usuario actual
             $data['user_id'] = auth()->id();
 
@@ -64,11 +71,15 @@ class EventService
 
             return $this->eventRepository->create($data);
         });
+
+        Cache::forget('event.statistics');
+
+        return $event;
     }
 
     public function updateEvent(int $id, array $data, ?UploadedFile $image = null): bool
     {
-        return DB::transaction(function () use ($id, $data, $image) {
+        $updated = DB::transaction(function () use ($id, $data, $image) {
             $event = $this->eventRepository->findById($id);
             
             if (!$event) {
@@ -96,11 +107,17 @@ class EventService
 
             return $this->eventRepository->update($id, $data);
         });
+
+        if ($updated) {
+            Cache::forget('event.statistics');
+        }
+
+        return $updated;
     }
 
     public function deleteEvent(int $id): bool
     {
-        return DB::transaction(function () use ($id) {
+        $deleted = DB::transaction(function () use ($id) {
             $event = $this->eventRepository->findById($id);
             
             if (!$event) {
@@ -119,6 +136,12 @@ class EventService
 
             return $this->eventRepository->delete($id);
         });
+
+        if ($deleted) {
+            Cache::forget('event.statistics');
+        }
+
+        return $deleted;
     }
 
     public function toggleEventVisibility(int $id): bool
@@ -210,27 +233,29 @@ class EventService
 
     public function getEventsByCategory(): array
     {
-        $events = $this->eventRepository->getUpcoming();
-        
-        return $events->groupBy('category')->map(function ($categoryEvents) {
-            return $categoryEvents->count();
-        })->toArray();
+        $events = $this->eventRepository->getUpcoming()->load('category');
+
+        return $events->groupBy(fn ($e) => $e->category?->name)
+            ->map(fn ($categoryEvents) => $categoryEvents->count())
+            ->toArray();
     }
 
     public function getEventStatistics(): array
     {
-        $allEvents = $this->eventRepository->getAll();
-        $upcomingEvents = $this->eventRepository->getUpcoming();
-        
-        return [
-            'total' => $allEvents->count(),
-            'upcoming' => $upcomingEvents->count(),
-            'past' => $allEvents->count() - $upcomingEvents->count(),
-            'by_category' => $this->getEventsByCategory(),
-            'this_week' => $upcomingEvents->filter(function ($event) {
-                return $event->date->isCurrentWeek();
-            })->count(),
-        ];
+        return Cache::remember('event.statistics', 300, function () {
+            $allEvents = $this->eventRepository->getAll();
+            $upcomingEvents = $this->eventRepository->getUpcoming();
+
+            return [
+                'total' => $allEvents->count(),
+                'upcoming' => $upcomingEvents->count(),
+                'past' => $allEvents->count() - $upcomingEvents->count(),
+                'by_category' => $this->getEventsByCategory(),
+                'this_week' => $upcomingEvents->filter(function ($event) {
+                    return $event->date->isCurrentWeek();
+                })->count(),
+            ];
+        });
     }
 
     public function getRecommendedEvents(int $userId, int $limit = 5): Collection
