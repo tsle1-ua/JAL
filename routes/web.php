@@ -7,8 +7,6 @@ use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
-use App\Models\Event;
-use App\Models\Place;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::resource('listings', ListingController::class);
 Route::resource('events', EventController::class);
 Route::resource('places', PlaceController::class);
+Route::resource('leisure-zones', LeisureZoneController::class)->middleware(['auth', 'verified']);
 
 // Rutas del sistema RoomieMatch
 Route::middleware(['auth', 'verified'])->prefix('roomie-match')->name('roomie.')->group(function () {
@@ -89,6 +88,7 @@ Route::prefix('academic')->name('academic.')->group(function () {
     Route::get('/', [AcademicInfoController::class, 'index'])->name('index');
     Route::get('/scholarships', [AcademicInfoController::class, 'scholarships'])->name('scholarships');
     Route::get('/cut-off-marks', [AcademicInfoController::class, 'cutOffMarks'])->name('cut-off-marks');
+    Route::get('/cut-off-calculator', [AcademicInfoController::class, 'calculator'])->name('calculator');
     Route::get('/search', [AcademicInfoController::class, 'search'])->name('search');
     
     // Rutas protegidas para preferencias académicas
