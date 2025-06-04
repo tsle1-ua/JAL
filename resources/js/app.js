@@ -325,6 +325,84 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const listingsMapEl = document.getElementById('listings-map');
+    if (listingsMapEl) {
+        window.initListingsMap = function () {
+            const center = JSON.parse(listingsMapEl.dataset.center);
+            const zoom = parseInt(listingsMapEl.dataset.zoom, 10);
+            const map = new google.maps.Map(listingsMapEl, { center, zoom });
+
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            const radiusInput = document.getElementById('radius');
+            const markers = [];
+
+            function clearMarkers() {
+                markers.forEach(m => m.setMap(null));
+                markers.length = 0;
+            }
+
+            function addMarkers(listings) {
+                listings.forEach(l => {
+                    if (!l.lat || !l.lng) return;
+                    const marker = new google.maps.Marker({
+                        position: { lat: parseFloat(l.lat), lng: parseFloat(l.lng) },
+                        map,
+                        title: l.title
+                    });
+                    marker.addListener('click', () => {
+                        window.location.href = l.url;
+                    });
+                    markers.push(marker);
+                });
+            }
+
+            addMarkers(JSON.parse(listingsMapEl.dataset.listings));
+
+            function updateCenterInputs() {
+                const c = map.getCenter();
+                if (latInput) latInput.value = c.lat();
+                if (lngInput) lngInput.value = c.lng();
+            }
+
+            async function updateListings() {
+                updateCenterInputs();
+                const form = document.querySelector('form');
+                const params = new URLSearchParams(new FormData(form));
+                const url = '/api/listings/cards?' + params.toString();
+                const skeletons = showSkeletons();
+                try {
+                    const res = await axios.get(url, { headers });
+                    removeSkeletons(skeletons);
+                    container.innerHTML = res.data.html;
+                    pagination.innerHTML = res.data.links;
+                    clearMarkers();
+                    addMarkers(res.data.listings);
+                    listingsMapEl.dataset.listings = JSON.stringify(res.data.listings);
+                } catch (err) {
+                    removeSkeletons(skeletons);
+                    console.error(err);
+                }
+            }
+
+            let debounceTimer;
+            map.addListener('idle', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(updateListings, 500);
+            });
+
+            if (radiusInput) {
+                radiusInput.addEventListener('change', () => updateListings());
+            }
+
+            updateCenterInputs();
+        };
+
+        if (window.google && window.google.maps) {
+            window.initListingsMap();
+        }
+    }
+
     const messagesEl = document.getElementById('messages');
     const msgForm = document.getElementById('message-form');
     if (messagesEl && msgForm) {
