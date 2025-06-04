@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Notifications\PasswordResetSuccessNotification;
 
 class ResetPasswordController extends Controller
 {
@@ -18,7 +19,7 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    use ResetsPasswords { resetPassword as protected traitResetPassword; }
 
     /**
      * Where to redirect users after resetting their password.
@@ -26,4 +27,13 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+
+    /**
+     * Override to send confirmation email after password reset.
+     */
+    protected function resetPassword($user, $password)
+    {
+        $this->traitResetPassword($user, $password);
+        $user->notify(new PasswordResetSuccessNotification());
+    }
 }
