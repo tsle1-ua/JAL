@@ -8,10 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Subscription;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'is_admin',
         'role',
+        'notifications_enabled',
     ];
 
     /**
@@ -48,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'role' => 'string',
+            'notifications_enabled' => 'boolean',
         ];
     }
 
@@ -199,5 +202,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->whereHas('profile', function ($q) use ($university) {
             $q->where('university_name', $university);
         });
+    }
+
+    /**
+     * Route notifications for the WebPush channel.
+     */
+    public function routeNotificationForWebPush()
+    {
+        return $this->pushSubscriptions();
     }
 }

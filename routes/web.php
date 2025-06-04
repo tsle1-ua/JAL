@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
