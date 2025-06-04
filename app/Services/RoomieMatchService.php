@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\RoomMatch;
+
 use App\Models\Profile;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +19,7 @@ class RoomieMatchService
         }
 
         // Obtener usuarios que ya han sido evaluados (liked o disliked)
-        $evaluatedUserIds = RoomMatch::where(function ($query) use ($userId) {
+
             $query->where('user_id_1', $userId)->whereIn('user_1_status', ['liked', 'disliked']);
         })->orWhere(function ($query) use ($userId) {
             $query->where('user_id_2', $userId)->whereIn('user_2_status', ['liked', 'disliked']);
@@ -57,7 +57,7 @@ class RoomieMatchService
             }
 
             // Crear o actualizar el match
-            $match = RoomMatch::createOrUpdateMatch($fromUserId, $toUserId, 'liked');
+
 
             $result = [
                 'success' => true,
@@ -83,14 +83,14 @@ class RoomieMatchService
                 throw new \Exception('No puedes rechazarte a ti mismo.');
             }
 
-            $match = RoomMatch::createOrUpdateMatch($fromUserId, $toUserId, 'disliked');
+
             return true;
         });
     }
 
     public function getMutualMatches(int $userId): Collection
     {
-        $matches = RoomMatch::mutualMatches()
+
             ->forUser($userId)
             ->with(['user1.profile', 'user2.profile'])
             ->orderBy('matched_at', 'desc')
@@ -107,7 +107,7 @@ class RoomieMatchService
     public function getPendingLikes(int $userId): Collection
     {
         // Usuarios que han dado like a este usuario pero aún no han recibido respuesta
-        $pendingMatches = RoomMatch::where('user_id_2', $userId)
+
             ->where('user_2_status', 'pending')
             ->where('user_1_status', 'liked')
             ->with(['user1.profile'])
@@ -122,7 +122,7 @@ class RoomieMatchService
 
     public function getMatchHistory(int $userId): array
     {
-        $allMatches = RoomMatch::forUser($userId)
+
             ->with(['user1.profile', 'user2.profile'])
             ->get();
 
@@ -174,7 +174,7 @@ class RoomieMatchService
     public function removeMatch(int $userId, int $matchId): bool
     {
         return DB::transaction(function () use ($userId, $matchId) {
-            $match = RoomMatch::find($matchId);
+
             
             if (!$match) {
                 return false;
