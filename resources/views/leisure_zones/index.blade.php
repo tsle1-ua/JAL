@@ -3,15 +3,18 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Zonas de ocio</h1>
-    <form method="GET" class="row g-2 mb-4">
+    <form method="GET" class="row g-2 mb-4" role="search">
         <div class="col-md-4">
-            <input type="text" name="city" class="form-control" placeholder="Ciudad" value="{{ request('city') }}">
+            <label for="filter-city" class="visually-hidden">Ciudad</label>
+            <input id="filter-city" type="text" name="city" class="form-control" placeholder="Ciudad" value="{{ request('city') }}">
         </div>
         <div class="col-md-4">
-            <input type="text" name="university" class="form-control" placeholder="Universidad" value="{{ request('university') }}">
+            <label for="filter-university" class="visually-hidden">Universidad</label>
+            <input id="filter-university" type="text" name="university" class="form-control" placeholder="Universidad" value="{{ request('university') }}">
         </div>
         <div class="col-md-4">
-            <input type="text" name="search" class="form-control" placeholder="Buscar" value="{{ request('search') }}">
+            <label for="filter-search" class="visually-hidden">Buscar</label>
+            <input id="filter-search" type="text" name="search" class="form-control" placeholder="Buscar" value="{{ request('search') }}">
         </div>
     </form>
     <div class="row">

@@ -3,18 +3,18 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Alojamientos</h1>
-    <form method="GET" class="row g-3 mb-4">
+    <form method="GET" class="row g-3 mb-4" role="search">
         <div class="col-md-4">
-            <label class="form-label">Tipo</label>
-            <select name="type" class="form-select" onchange="this.form.submit()">
+            <label class="form-label" for="filter-type">Tipo</label>
+            <select id="filter-type" name="type" class="form-select" onchange="this.form.submit()">
                 <option value="">Todos</option>
                 <option value="apartamento" {{ request('type')=='apartamento' ? 'selected' : '' }}>Apartamento</option>
                 <option value="residencia" {{ request('type')=='residencia' ? 'selected' : '' }}>Residencia</option>
             </select>
         </div>
         <div class="col-md-4">
-            <label class="form-label">Ciudad</label>
-            <input type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad">
+            <label class="form-label" for="filter-city">Ciudad</label>
+            <input id="filter-city" type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad">
         </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Filtrar</button>

@@ -17,15 +17,15 @@
             <div class="card">
                 <div class="card-body">
                     <h5>Reservar visita</h5>
-                    <form method="POST" action="{{ route('listings.schedule', $listing) }}">
+                    <form method="POST" action="{{ route('listings.schedule', $listing) }}" role="form">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label">Fecha</label>
-                            <input type="date" name="visit_date" class="form-control" required>
+                            <label class="form-label" for="visit-date">Fecha</label>
+                            <input id="visit-date" type="date" name="visit_date" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Hora</label>
-                            <input type="time" name="visit_time" class="form-control" required>
+                            <label class="form-label" for="visit-time">Hora</label>
+                            <input id="visit-time" type="time" name="visit_time" class="form-control" required>
                         </div>
                         <button class="btn btn-primary w-100" type="submit">Reservar</button>
                     </form>

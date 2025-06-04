@@ -11,10 +11,11 @@
             </div>
         @endforeach
     </div>
-    <form method="POST" action="{{ route('roomie.message', $match->id) }}">
+    <form method="POST" action="{{ route('roomie.message', $match->id) }}" role="form">
         @csrf
         <div class="input-group">
-            <input type="text" name="content" class="form-control" placeholder="Escribe un mensaje">
+            <label for="message-content" class="visually-hidden">Mensaje</label>
+            <input id="message-content" type="text" name="content" class="form-control" placeholder="Escribe un mensaje">
             <button class="btn btn-primary">Enviar</button>
         </div>
     </form>

@@ -3,27 +3,27 @@
 @section('content')
 <div class="container">
     <h1 class="mb-4">Crear Evento</h1>
-    <form method="POST" action="{{ route('events.store') }}">
+    <form method="POST" action="{{ route('events.store') }}" role="form">
         @csrf
         <div class="mb-3">
-            <label class="form-label">Título</label>
-            <input type="text" name="title" class="form-control" required>
+            <label class="form-label" for="event-title">Título</label>
+            <input id="event-title" type="text" name="title" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Descripción</label>
-            <textarea name="description" class="form-control" required></textarea>
+            <label class="form-label" for="event-description">Descripción</label>
+            <textarea id="event-description" name="description" class="form-control" required></textarea>
         </div>
         <div class="mb-3">
-            <label class="form-label">Fecha</label>
-            <input type="date" name="date" class="form-control" required>
+            <label class="form-label" for="event-date">Fecha</label>
+            <input id="event-date" type="date" name="date" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Hora</label>
-            <input type="time" name="time" class="form-control">
+            <label class="form-label" for="event-time">Hora</label>
+            <input id="event-time" type="time" name="time" class="form-control">
         </div>
         <div class="mb-3">
-            <label class="form-label">Lugar</label>
-            <select name="place_id" class="form-select">
+            <label class="form-label" for="event-place">Lugar</label>
+            <select id="event-place" name="place_id" class="form-select">
                 <option value="">Selecciona una zona</option>
                 @foreach($places as $place)
                     <option value="{{ $place->id }}">{{ $place->name }}</option>
@@ -32,12 +32,12 @@
             <small class="form-text text-muted">Si no existe, <a href="{{ route('places.create') }}">crea una nueva zona</a>.</small>
         </div>
         <div class="mb-3">
-            <label class="form-label">Precio</label>
-            <input type="number" step="0.01" name="price" class="form-control" value="0">
+            <label class="form-label" for="event-price">Precio</label>
+            <input id="event-price" type="number" step="0.01" name="price" class="form-control" value="0">
         </div>
         <div class="mb-3">
-            <label class="form-label">Máximo de asistentes</label>
-            <input type="number" name="max_attendees" class="form-control">
+            <label class="form-label" for="event-max-attendees">Máximo de asistentes</label>
+            <input id="event-max-attendees" type="number" name="max_attendees" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>

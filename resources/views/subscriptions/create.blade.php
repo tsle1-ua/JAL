@@ -5,7 +5,7 @@
     <h1>Activar pago automático</h1>
     <p>Suscribirse al anuncio: <strong>{{ $listing->title }}</strong></p>
 
-    <form method="POST" action="{{ route('subscriptions.store', $listing) }}">
+    <form method="POST" action="{{ route('subscriptions.store', $listing) }}" role="form">
         @csrf
         <div class="mb-3">
             <label class="form-label" for="monthly_amount">Importe mensual</label>

@@ -11,12 +11,12 @@
 
     @auth
         @if(!$event->is_user_attending && $event->has_available_spots)
-            <form method="POST" action="{{ route('events.register', $event) }}" class="d-inline">
+            <form method="POST" action="{{ route('events.register', $event) }}" class="d-inline" role="form">
                 @csrf
                 <button class="btn btn-success">Unirme</button>
             </form>
         @elseif($event->is_user_attending)
-            <form method="POST" action="{{ route('events.unregister', $event) }}" class="d-inline">
+            <form method="POST" action="{{ route('events.unregister', $event) }}" class="d-inline" role="form">
                 @csrf
                 @method('DELETE')
                 <button class="btn btn-danger">Cancelar asistencia</button>

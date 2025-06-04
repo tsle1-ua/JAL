@@ -15,7 +15,7 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <h5 class="card-title">{{ $candidate->name }}</h5>
-                        <form method="POST" action="{{ route('roomie.like', $candidate->id) }}">
+                        <form method="POST" action="{{ route('roomie.like', $candidate->id) }}" role="form">
                             @csrf
                             <button class="btn btn-sm btn-success">Like</button>
                         </form>
