@@ -79,4 +79,33 @@ document.addEventListener('DOMContentLoaded', () => {
             if (maxEl) maxEl.textContent = Math.round(values[1]);
         });
     }
+
+    const cityInput = document.querySelector('input[name="city"]');
+    const cityList = document.getElementById('city-suggestions');
+    if (cityInput && cityList) {
+        let cancelToken;
+        cityInput.addEventListener('input', () => {
+            const term = cityInput.value.trim();
+            if (term.length < 2) {
+                cityList.innerHTML = '';
+                return;
+            }
+            if (cancelToken) cancelToken.cancel();
+            cancelToken = axios.CancelToken.source();
+            axios.get('/api/cities', {
+                params: { term },
+                cancelToken: cancelToken.token,
+                headers
+            }).then(response => {
+                cityList.innerHTML = '';
+                response.data.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    cityList.appendChild(option);
+                });
+            }).catch(error => {
+                if (!axios.isCancel(error)) console.error(error);
+            });
+        });
+    }
 });

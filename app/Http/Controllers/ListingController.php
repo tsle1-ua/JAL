@@ -218,6 +218,24 @@ class ListingController extends Controller
     }
 
     /**
+     * Suggest city names for autocomplete.
+     */
+    public function citySuggestions(Request $request): JsonResponse
+    {
+        $term = $request->input('term');
+
+        $cities = \App\Models\Listing::query()
+            ->select('city')
+            ->when($term, fn($q) => $q->where('city', 'like', "%{$term}%"))
+            ->distinct()
+            ->orderBy('city')
+            ->limit(10)
+            ->pluck('city');
+
+        return response()->json($cities);
+    }
+
+    /**
      * Get listing statistics (AJAX).
      */
     public function statistics(): JsonResponse
