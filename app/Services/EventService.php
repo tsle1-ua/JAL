@@ -165,26 +165,27 @@ class EventService
 
     public function registerAttendance(int $eventId): bool
     {
-        $event = $this->eventRepository->findById($eventId);
+        return DB::transaction(function () use ($eventId) {
+            $event = Event::where('id', $eventId)->lockForUpdate()->first();
 
-        if (!$event) {
-            return false;
-        }
+            if (!$event) {
+                return false;
+            }
 
-        // Verificar si hay cupo disponible
-        if (!$event->has_available_spots) {
-            throw new \Exception('No hay cupos disponibles para este evento.');
-        }
+            // Verificar si hay cupo disponible
+            if (!$event->has_available_spots) {
+                throw new \Exception('No hay cupos disponibles para este evento.');
+            }
 
-        if ($event->attendees()->where('user_id', auth()->id())->exists()) {
-            throw new \Exception('Ya estás registrado en este evento.');
-        }
+            if ($event->attendees()->where('user_id', auth()->id())->exists()) {
+                throw new \Exception('Ya estás registrado en este evento.');
+            }
 
-        $event->attendees()->attach(auth()->id());
+            $event->attendees()->attach(auth()->id());
+            $event->increment('current_attendees');
 
-        return $this->eventRepository->update($eventId, [
-            'current_attendees' => $event->current_attendees + 1
-        ]);
+            return true;
+        });
     }
 
     public function unregisterAttendance(int $eventId): bool
