@@ -1,12 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.17/index.global.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.17/index.global.min.css">
 <div class="container">
     <h1 class="mb-4">Eventos</h1>
     @auth
         <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Crear evento</a>
     @endauth
 
+    @php
+        $calendarEvents = $events->map(function ($event) {
+            return [
+                'title' => $event->title,
+                'start' => $event->date->format('Y-m-d') . ($event->time ? 'T' . $event->time->format('H:i:s') : ''),
+                'url' => route('events.show', $event),
+            ];
+        });
+    @endphp
+
+    <div class="mb-3">
+        <button id="toggle-view" class="btn btn-secondary">Ver calendario</button>
+    </div>
+    <div id="event-list">
     @foreach($events as $event)
         <div class="card mb-3">
             <div class="card-body">
@@ -20,6 +36,9 @@
         </div>
     @endforeach
     {{ $events->appends(request()->query())->links() }}
+    </div>
+
+    <div id="calendar" class="d-none" data-events='@json($calendarEvents)'></div>
 
     @isset($places)
         <hr>

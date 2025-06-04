@@ -2,6 +2,9 @@ import 'bootstrap';
 import axios from 'axios';
 import noUiSlider from 'nouislider';
 import 'nouislider/dist/nouislider.min.css';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -216,5 +219,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         showStep(currentStep);
+    }
+
+    const calendarEl = document.getElementById('calendar');
+    const listEl = document.getElementById('event-list');
+    const toggleBtn = document.getElementById('toggle-view');
+
+    if (calendarEl) {
+        const calendar = new Calendar(calendarEl, {
+            plugins: [dayGridPlugin, interactionPlugin],
+            initialView: 'dayGridMonth',
+            events: JSON.parse(calendarEl.dataset.events)
+        });
+        calendar.render();
+
+        if (toggleBtn && listEl) {
+            toggleBtn.addEventListener('click', () => {
+                listEl.classList.toggle('d-none');
+                calendarEl.classList.toggle('d-none');
+                toggleBtn.textContent = listEl.classList.contains('d-none') ? 'Ver lista' : 'Ver calendario';
+            });
+        }
     }
 });
