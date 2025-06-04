@@ -278,8 +278,50 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
+
         if (window.google && window.google.maps) {
             window.initEventMap();
+        }
+    }
+
+    const listingMapEl = document.getElementById('listing-map');
+    if (listingMapEl) {
+        window.initListingMap = function () {
+            const center = JSON.parse(listingMapEl.dataset.center);
+            const zoom = parseInt(listingMapEl.dataset.zoom, 10);
+            const latInput = document.querySelector('input[name="latitude"]');
+            const lngInput = document.querySelector('input[name="longitude"]');
+            const startLat = parseFloat(latInput.value) || center.lat;
+            const startLng = parseFloat(lngInput.value) || center.lng;
+            const map = new google.maps.Map(listingMapEl, {
+                center: { lat: startLat, lng: startLng },
+                zoom
+            });
+
+            let marker;
+
+            function setMarker(latLng) {
+                if (!marker) {
+                    marker = new google.maps.Marker({ position: latLng, map });
+                } else {
+                    marker.setPosition(latLng);
+                }
+            }
+
+            map.addListener('click', e => {
+                setMarker(e.latLng);
+                if (latInput) latInput.value = e.latLng.lat();
+                if (lngInput) lngInput.value = e.latLng.lng();
+            });
+
+            if (latInput.value && lngInput.value) {
+                const pos = new google.maps.LatLng(startLat, startLng);
+                setMarker(pos);
+            }
+        };
+
+        if (window.google && window.google.maps) {
+            window.initListingMap();
         }
     }
 

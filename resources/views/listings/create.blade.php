@@ -67,6 +67,15 @@
             <label class="form-label">Disponible desde</label>
             <input type="date" name="available_from" value="{{ old('available_from') }}" class="form-control" required>
         </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ubicación en el mapa</label>
+            <div id="listing-map" style="height: 300px"
+                 data-center='@json(config('services.google_maps.default_center'))'
+                 data-zoom='{{ config('services.google_maps.default_zoom') }}'></div>
+            <div class="form-text">Haz clic en el mapa para colocar el marcador.</div>
+        </div>
+
         <div class="mb-3">
             <label class="form-label">Latitud</label>
             <input type="number" step="0.000001" name="latitude" value="{{ old('latitude') }}" class="form-control">
@@ -82,4 +91,5 @@
         <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 </div>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&callback=initListingMap" async defer></script>
 @endsection
