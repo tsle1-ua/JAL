@@ -142,7 +142,7 @@ class EventService
     public function registerAttendance(int $eventId): bool
     {
         $event = $this->eventRepository->findById($eventId);
-        
+
         if (!$event) {
             return false;
         }
@@ -152,7 +152,12 @@ class EventService
             throw new \Exception('No hay cupos disponibles para este evento.');
         }
 
-        // Incrementar asistentes
+        if ($event->attendees()->where('user_id', auth()->id())->exists()) {
+            throw new \Exception('Ya estás registrado en este evento.');
+        }
+
+        $event->attendees()->attach(auth()->id());
+
         return $this->eventRepository->update($eventId, [
             'current_attendees' => $event->current_attendees + 1
         ]);
@@ -162,13 +167,18 @@ class EventService
     {
         $event = $this->eventRepository->findById($eventId);
         
-        if (!$event || $event->current_attendees <= 0) {
+        if (!$event) {
             return false;
         }
 
-        // Decrementar asistentes
+        if (!$event->attendees()->where('user_id', auth()->id())->exists()) {
+            return false;
+        }
+
+        $event->attendees()->detach(auth()->id());
+
         return $this->eventRepository->update($eventId, [
-            'current_attendees' => $event->current_attendees - 1
+            'current_attendees' => max(0, $event->current_attendees - 1)
         ]);
     }
 

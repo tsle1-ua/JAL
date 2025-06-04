@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\EventService;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Models\Place;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -47,7 +48,8 @@ class EventController extends Controller
      */
     public function create(): View
     {
-        return view('events.create');
+        $places = Place::all();
+        return view('events.create', compact('places'));
     }
 
     /**

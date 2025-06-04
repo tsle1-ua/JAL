@@ -81,6 +81,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Events the user is attending.
+     */
+    public function attendingEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_user')->withTimestamps();
+    }
+
+    /**
      * Get the user's places.
      */
     public function places()
