@@ -38,7 +38,7 @@
 
                     <ul class="navbar-nav ms-auto align-items-center mb-2 mb-md-0">
                         <li class="nav-item me-2">
-                            <button id="theme-toggle" type="button" class="btn btn-link nav-link px-2"><i class="bi bi-moon-fill"></i></button>
+                            <button id="theme-toggle" type="button" class="btn btn-link nav-link px-2" aria-label="Toggle theme"><i class="bi bi-moon-fill"></i></button>
                         </li>
                         @guest
                             @if (Route::has('login'))
