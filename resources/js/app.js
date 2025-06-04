@@ -13,15 +13,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const htmlEl = document.documentElement;
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme) htmlEl.setAttribute('data-bs-theme', storedTheme);
-
     const themeToggle = document.getElementById('theme-toggle');
+    const toggleIcon = themeToggle?.querySelector('i');
+
+    function setIcon(theme) {
+        if (!toggleIcon) return;
+        toggleIcon.classList.toggle('bi-moon-fill', theme === 'light');
+        toggleIcon.classList.toggle('bi-sun-fill', theme === 'dark');
+    }
+
+    const storedTheme = localStorage.getItem('theme') || 'light';
+    htmlEl.setAttribute('data-bs-theme', storedTheme);
+    setIcon(storedTheme);
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
             const newTheme = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
             htmlEl.setAttribute('data-bs-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            setIcon(newTheme);
         });
     }
 
