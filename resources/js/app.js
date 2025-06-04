@@ -1,1 +1,1 @@
-import 'bootstrap';
+// Tailwind scripts placeholder
