@@ -29,6 +29,6 @@ class ErrorPagesTest extends TestCase
         $response = $this->get('/force-error');
 
         $response->assertStatus(500);
-        $response->assertSee('Error del servidor');
+        $response->assertSee('Ups! Algo salió mal');
     }
 }
