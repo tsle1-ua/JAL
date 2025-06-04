@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RoomieMatchController;
@@ -34,6 +35,10 @@ Route::get('/ocio', function () {
 
 // Rutas de autenticación (se instalarán con Laravel UI)
 Auth::routes(['verify' => true]);
+
+// OAuth routes
+Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect'])->name('oauth.redirect');
+Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback'])->name('oauth.callback');
 
 // Dashboard principal
 Route::get('/dashboard', [DashboardController::class, 'index'])

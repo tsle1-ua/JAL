@@ -64,6 +64,11 @@
                                 @endif
                             </div>
                         </div>
+                        <div class="mt-3 text-center">
+                            <a href="{{ route('oauth.redirect', 'google') }}" class="btn btn-danger w-100">
+                                {{ __('Login with Google') }}
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
