@@ -34,6 +34,17 @@
     <div id="listing-container" class="row">
         @include('listings.partials.cards', ['listings' => $listings])
     </div>
+    <template id="skeleton-card-template">
+        <div class="col-md-4 mb-4 skeleton-placeholder">
+            <div class="card h-100 skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="card-body">
+                    <div class="skeleton-text mb-2 w-75"></div>
+                    <div class="skeleton-text w-50"></div>
+                </div>
+            </div>
+        </div>
+    </template>
     <div id="pagination-links" class="d-none">
         {{ $listings->appends(request()->query())->links() }}
     </div>
