@@ -25,3 +25,4 @@ yarn-error.log
 .env
 storage/logs/*
 bootstrap/cache/*
+!bootstrap/cache/.gitkeep
