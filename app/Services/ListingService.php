@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class ListingService
 {
@@ -182,29 +181,9 @@ class ListingService
 
     protected function geocodeAddress(string $address): ?array
     {
-        $cacheKey = 'geocode_' . md5($address);
-
-        if (Cache::has($cacheKey)) {
-            return Cache::get($cacheKey);
-        }
-
-        // Implementación básica de geocodificación
-        // En producción, usar servicio como Google Maps Geocoding API
-        // Por ahora, devolvemos coordenadas de ejemplo
-
-        // Esto es solo un ejemplo - en producción usar una API real
-        $defaultCoordinates = [
-            'Madrid' => ['lat' => 40.4168, 'lng' => -3.7038],
-            'Barcelona' => ['lat' => 41.3851, 'lng' => 2.1734],
-            'Valencia' => ['lat' => 39.4699, 'lng' => -0.3763],
-            'Sevilla' => ['lat' => 37.3891, 'lng' => -5.9845],
-        ];
-
-        foreach ($defaultCoordinates as $city => $coords) {
-            if (stripos($address, $city) !== false) {
-                Cache::put($cacheKey, $coords, now()->addDays(30));
-                return $coords;
             }
+        } catch (\Throwable $e) {
+            Log::error('Geocoding error: ' . $e->getMessage());
         }
 
         return null;

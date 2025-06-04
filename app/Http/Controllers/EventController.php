@@ -94,7 +94,7 @@ class EventController extends Controller
     public function edit(int $id): View
     {
         $event = $this->eventService->findEvent($id);
-        
+
         if (!$event) {
             abort(404, 'Evento no encontrado.');
         }
@@ -104,7 +104,9 @@ class EventController extends Controller
             abort(403, 'No tienes permisos para editar este evento.');
         }
 
-        return view('events.edit', compact('event'));
+        $places = Place::all();
+
+        return view('events.edit', compact('event', 'places'));
     }
 
     /**
