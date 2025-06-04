@@ -117,6 +117,18 @@ Obtén una API key de Google Maps y añádela al `.env`:
 GOOGLE_MAPS_API_KEY=tu_api_key_aqui
 ```
 
+### 11. Configurar inicio de sesión social (Opcional)
+Para permitir iniciar sesión con Google o Facebook, agrega las credenciales a tu `.env`:
+```env
+GOOGLE_CLIENT_ID=tu_cliente_id
+GOOGLE_CLIENT_SECRET=tu_secreto
+GOOGLE_REDIRECT_URI="${APP_URL}/api/login/google/callback"
+
+FACEBOOK_CLIENT_ID=tu_app_id
+FACEBOOK_CLIENT_SECRET=tu_secreto
+FACEBOOK_REDIRECT_URI="${APP_URL}/api/login/facebook/callback"
+```
+
 ## 🚀 Ejecutar el proyecto
 
 ### Desarrollo
