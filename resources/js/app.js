@@ -1,3 +1,4 @@
+import 'bootstrap';
 import axios from 'axios';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,6 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'X-Requested-With': 'XMLHttpRequest',
         'Accept': 'application/json'
     };
+
+    const htmlEl = document.documentElement;
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) htmlEl.setAttribute('data-bs-theme', storedTheme);
+
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const newTheme = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            htmlEl.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
 
     function showMatchNotification(name) {
         const alert = document.getElementById('matchNotification');
