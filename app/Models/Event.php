@@ -224,6 +224,14 @@ class Event extends Model
     }
 
     /**
+     * Scope to filter by multiple categories.
+     */
+    public function scopeByCategories($query, array $categoryIds)
+    {
+        return $query->whereIn('category_id', $categoryIds);
+    }
+
+    /**
      * Scope to get upcoming events.
      */
     public function scopeUpcoming($query)

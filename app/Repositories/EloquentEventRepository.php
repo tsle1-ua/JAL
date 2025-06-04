@@ -64,6 +64,10 @@ class EloquentEventRepository implements EventRepositoryInterface
     {
         $query = Event::with(['user', 'place'])->public();
 
+        $query->when(isset($filters['categories']) && is_array($filters['categories']), function ($q) use ($filters) {
+            $q->byCategories($filters['categories']);
+        });
+
         $query->when(isset($filters['category']), function ($q) use ($filters) {
             $q->byCategory($filters['category']);
         });
@@ -98,6 +102,10 @@ class EloquentEventRepository implements EventRepositoryInterface
     public function searchWithFiltersPaginated(array $filters, int $perPage = 15): LengthAwarePaginator
     {
         $query = Event::with(['user', 'place'])->public();
+
+        $query->when(isset($filters['categories']) && is_array($filters['categories']), function ($q) use ($filters) {
+            $q->byCategories($filters['categories']);
+        });
 
         $query->when(isset($filters['category']), function ($q) use ($filters) {
             $q->byCategory($filters['category']);

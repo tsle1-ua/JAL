@@ -27,7 +27,7 @@ class EventController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->only([
-            'category', 'date', 'start_date', 'end_date', 
+            'categories', 'category', 'date', 'start_date', 'end_date',
             'city', 'free', 'available_spots', 'search'
         ]);
 
@@ -40,12 +40,14 @@ class EventController extends Controller
         $statistics = $this->eventService->getEventStatistics();
         $upcomingEvents = $this->eventService->getUpcomingEvents()->take(5);
 
+        $categories = \App\Models\Category::all();
+
         $recommendedEvents = collect();
         if (auth()->check()) {
             $recommendedEvents = $this->eventService->getRecommendedEvents(auth()->id());
         }
 
-        return view('events.index', compact('events', 'statistics', 'upcomingEvents', 'filters', 'recommendedEvents'));
+        return view('events.index', compact('events', 'statistics', 'upcomingEvents', 'filters', 'recommendedEvents', 'categories'));
     }
 
     /**
