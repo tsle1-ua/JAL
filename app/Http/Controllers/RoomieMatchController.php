@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\RoomieMatchService;
 
 use App\Models\Message;
+use App\Models\RoomMatch;
 use App\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
