@@ -258,7 +258,8 @@ class ListingService
 
     public function getListingStatistics(): array
     {
-        return Cache::remember('listing.statistics', 300, function () {
+        $ttl = config('listings.statistics_cache_ttl', 86400);
+        return Cache::remember('listing.statistics', $ttl, function () {
             $total = $this->listingRepository->getAll()->count();
             $available = $this->listingRepository->getAvailable()->count();
             $avgPrice = $this->listingRepository->getAvailable()->avg('price');
