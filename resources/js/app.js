@@ -122,6 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('listing-container');
     const pagination = document.getElementById('pagination-links');
     const sentinel = document.getElementById('load-more-sentinel');
+    const skeletonTemplate = document.getElementById('skeleton-card-template');
+
+    function showSkeletons(count = 3) {
+        const skeletons = [];
+        if (!skeletonTemplate) return skeletons;
+        for (let i = 0; i < count; i++) {
+            const clone = skeletonTemplate.content.firstElementChild.cloneNode(true);
+            container.appendChild(clone);
+            skeletons.push(clone);
+        }
+        return skeletons;
+    }
+
+    function removeSkeletons(nodes) {
+        nodes.forEach(n => n.remove());
+    }
     if (container && pagination && sentinel) {
         const observer = new IntersectionObserver(entries => {
             if (entries.some(e => e.isIntersecting)) {
@@ -141,11 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = new URL(nextLink.href);
             url.pathname = '/api/listings/cards';
 
+            const skeletons = showSkeletons();
             try {
                 const response = await axios.get(url.toString(), { headers });
+                removeSkeletons(skeletons);
                 container.insertAdjacentHTML('beforeend', response.data.html);
                 pagination.innerHTML = response.data.links;
             } catch (error) {
+                removeSkeletons(skeletons);
                 console.error(error);
             }
         }
