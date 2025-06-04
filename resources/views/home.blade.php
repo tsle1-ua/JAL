@@ -9,7 +9,7 @@
                 {{ session('status') }}
             </div>
         @endif
-        <p class="text-lg">{{ __('You are logged in!') }}</p>
+
     </div>
 </div>
 @endsection
