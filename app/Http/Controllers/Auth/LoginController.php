@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Validation\ValidationException;
+use App\Models\LoginAttempt;
 
 class LoginController extends Controller
 {
@@ -51,5 +53,19 @@ class LoginController extends Controller
             ->handle($request, function () {
                 return redirect()->intended($this->redirectPath());
             });
+    }
+
+    /**
+     * Handle a failed authentication attempt.
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        LoginAttempt::create([
+            'ip_address' => $request->ip(),
+        ]);
+
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
 }
