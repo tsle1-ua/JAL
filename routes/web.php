@@ -7,7 +7,6 @@ use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RoomieMatchController;
 use App\Http\Controllers\AcademicInfoController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LeisureZoneController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +24,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/ocio', function () {
+    $events = App\Models\Event::public()->upcoming()->get();
+    $places = App\Models\Place::all();
+    return view('events.index', compact('events', 'places'));
+})->name('ocio');
 
 // Rutas de autenticación (se instalarán con Laravel UI)
 Auth::routes(['verify' => true]);
