@@ -64,6 +64,14 @@ class Event extends Model
     }
 
     /**
+     * Tags associated with the event.
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    /**
      * Users attending this event.
      */
     public function attendees()
