@@ -19,15 +19,18 @@ window.Echo = new Echo({
 
 document.addEventListener('DOMContentLoaded', () => {
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .catch(err => console.error('SW registration failed:', err));
+        navigator.serviceWorker
+            .register('/service-worker.js')
+            .catch((err) => console.error('SW registration failed:', err));
     }
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute('content');
 
     const headers = {
         'X-CSRF-TOKEN': csrfToken,
         'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json'
+        Accept: 'application/json',
     };
 
     const htmlEl = document.documentElement;
@@ -46,7 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            const newTheme = htmlEl.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            const newTheme =
+                htmlEl.getAttribute('data-bs-theme') === 'dark'
+                    ? 'light'
+                    : 'dark';
             htmlEl.setAttribute('data-bs-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             setIcon(newTheme);
@@ -62,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function processForm(form) {
-        axios.post(form.action, new FormData(form), { headers })
-            .then(response => {
+        axios
+            .post(form.action, new FormData(form), { headers })
+            .then((response) => {
                 if (response.data.is_mutual_match && response.data.other_user) {
                     showMatchNotification(response.data.other_user.name);
                 }
@@ -71,11 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = form.closest('.col-md-4');
                 if (card) card.remove();
             })
-            .catch(error => console.error(error));
+            .catch((error) => console.error(error));
     }
 
-    document.body.addEventListener('submit', e => {
-        if (e.target.matches('.like-form') || e.target.matches('.dislike-form')) {
+    document.body.addEventListener('submit', (e) => {
+        if (
+            e.target.matches('.like-form') ||
+            e.target.matches('.dislike-form')
+        ) {
             e.preventDefault();
             processForm(e.target);
         }
@@ -84,25 +94,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceSlider = document.getElementById('price-slider');
     const priceInput = document.getElementById('price_range');
     if (priceSlider && priceInput) {
-        const startValues = priceInput.value.split(',').map(v => parseInt(v, 10));
+        const startValues = priceInput.value
+            .split(',')
+            .map((v) => parseInt(v, 10));
         noUiSlider.create(priceSlider, {
             start: startValues,
             connect: true,
             range: {
                 min: 0,
-                max: 2000
+                max: 2000,
             },
             tooltips: [true, true],
             format: {
-                to: value => Math.round(value),
-                from: value => Number(value)
-            }
+                to: (value) => Math.round(value),
+                from: (value) => Number(value),
+            },
         });
 
         const minEl = document.getElementById('price-slider-min');
         const maxEl = document.getElementById('price-slider-max');
         priceSlider.noUiSlider.on('update', (values) => {
-            priceInput.value = values.map(v => Math.round(v)).join(',');
+            priceInput.value = values.map((v) => Math.round(v)).join(',');
             if (minEl) minEl.textContent = Math.round(values[0]);
             if (maxEl) maxEl.textContent = Math.round(values[1]);
         });
@@ -120,20 +132,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (cancelToken) cancelToken.cancel();
             cancelToken = axios.CancelToken.source();
-            axios.get('/api/cities', {
-                params: { term },
-                cancelToken: cancelToken.token,
-                headers
-            }).then(response => {
-                cityList.innerHTML = '';
-                response.data.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    cityList.appendChild(option);
+            axios
+                .get('/api/cities', {
+                    params: { term },
+                    cancelToken: cancelToken.token,
+                    headers,
+                })
+                .then((response) => {
+                    cityList.innerHTML = '';
+                    response.data.forEach((city) => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        cityList.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    if (!axios.isCancel(error)) console.error(error);
                 });
-            }).catch(error => {
-                if (!axios.isCancel(error)) console.error(error);
-            });
         });
     }
 
@@ -146,7 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const skeletons = [];
         if (!skeletonTemplate) return skeletons;
         for (let i = 0; i < count; i++) {
-            const clone = skeletonTemplate.content.firstElementChild.cloneNode(true);
+            const clone =
+                skeletonTemplate.content.firstElementChild.cloneNode(true);
             container.appendChild(clone);
             skeletons.push(clone);
         }
@@ -154,14 +170,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function removeSkeletons(nodes) {
-        nodes.forEach(n => n.remove());
+        nodes.forEach((n) => n.remove());
     }
     if (container && pagination && sentinel) {
-        const observer = new IntersectionObserver(entries => {
-            if (entries.some(e => e.isIntersecting)) {
-                loadNextPage();
-            }
-        }, { rootMargin: '100px' });
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries.some((e) => e.isIntersecting)) {
+                    loadNextPage();
+                }
+            },
+            { rootMargin: '100px' }
+        );
 
         observer.observe(sentinel);
 
@@ -207,10 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgress();
         }
 
-        registerForm.querySelectorAll('[data-next]').forEach(btn => {
-            btn.addEventListener('click', e => {
+        registerForm.querySelectorAll('[data-next]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                const inputs = steps[currentStep].querySelectorAll('input, select');
+                const inputs =
+                    steps[currentStep].querySelectorAll('input, select');
                 for (const input of inputs) {
                     if (!input.reportValidity()) {
                         return;
@@ -223,8 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        registerForm.querySelectorAll('[data-prev]').forEach(btn => {
-            btn.addEventListener('click', e => {
+        registerForm.querySelectorAll('[data-prev]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (currentStep > 0) {
                     currentStep--;
@@ -245,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const calendar = new Calendar(calendarEl, {
             plugins: [dayGridPlugin, interactionPlugin],
             initialView: 'dayGridMonth',
-            events: JSON.parse(calendarEl.dataset.events)
+            events: JSON.parse(calendarEl.dataset.events),
         });
         calendar.render();
 
@@ -253,7 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleBtn.addEventListener('click', () => {
                 listEl.classList.toggle('d-none');
                 calendarEl.classList.toggle('d-none');
-                toggleBtn.textContent = listEl.classList.contains('d-none') ? 'Ver lista' : 'Ver calendario';
+                toggleBtn.textContent = listEl.classList.contains('d-none')
+                    ? 'Ver lista'
+                    : 'Ver calendario';
             });
         }
     }
@@ -265,19 +287,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const map = new google.maps.Map(mapEl, { center, zoom });
             const events = JSON.parse(mapEl.dataset.events);
 
-            events.forEach(evt => {
+            events.forEach((evt) => {
                 if (!evt.lat || !evt.lng) return;
                 const marker = new google.maps.Marker({
-                    position: { lat: parseFloat(evt.lat), lng: parseFloat(evt.lng) },
+                    position: {
+                        lat: parseFloat(evt.lat),
+                        lng: parseFloat(evt.lng),
+                    },
                     map,
-                    title: evt.title
+                    title: evt.title,
                 });
                 marker.addListener('click', () => {
                     window.location.href = evt.url;
                 });
             });
         };
-
 
         if (window.google && window.google.maps) {
             window.initEventMap();
@@ -295,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const startLng = parseFloat(lngInput.value) || center.lng;
             const map = new google.maps.Map(listingMapEl, {
                 center: { lat: startLat, lng: startLng },
-                zoom
+                zoom,
             });
 
             let marker;
@@ -308,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            map.addListener('click', e => {
+            map.addListener('click', (e) => {
                 setMarker(e.latLng);
                 if (latInput) latInput.value = e.latLng.lat();
                 if (lngInput) lngInput.value = e.latLng.lng();
@@ -338,17 +362,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const markers = [];
 
             function clearMarkers() {
-                markers.forEach(m => m.setMap(null));
+                markers.forEach((m) => m.setMap(null));
                 markers.length = 0;
             }
 
             function addMarkers(listings) {
-                listings.forEach(l => {
+                listings.forEach((l) => {
                     if (!l.lat || !l.lng) return;
                     const marker = new google.maps.Marker({
-                        position: { lat: parseFloat(l.lat), lng: parseFloat(l.lng) },
+                        position: {
+                            lat: parseFloat(l.lat),
+                            lng: parseFloat(l.lng),
+                        },
                         map,
-                        title: l.title
+                        title: l.title,
                     });
                     marker.addListener('click', () => {
                         window.location.href = l.url;
@@ -378,7 +405,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     pagination.innerHTML = res.data.links;
                     clearMarkers();
                     addMarkers(res.data.listings);
-                    listingsMapEl.dataset.listings = JSON.stringify(res.data.listings);
+                    listingsMapEl.dataset.listings = JSON.stringify(
+                        res.data.listings
+                    );
                 } catch (err) {
                     removeSkeletons(skeletons);
                     console.error(err);
@@ -417,21 +446,21 @@ document.addEventListener('DOMContentLoaded', () => {
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        msgForm.addEventListener('submit', e => {
+        msgForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const content = input.value.trim();
             if (!content) return;
-            axios.post(msgForm.action, { content }, { headers })
-                .then(res => {
+            axios
+                .post(msgForm.action, { content }, { headers })
+                .then((res) => {
                     appendMessage(res.data);
                     input.value = '';
                 })
-                .catch(err => console.error(err));
+                .catch((err) => console.error(err));
         });
 
-        Echo.private(`match.${matchId}`)
-            .listen('MessageSent', e => {
-                appendMessage(e.message);
-            });
+        Echo.private(`match.${matchId}`).listen('MessageSent', (e) => {
+            appendMessage(e.message);
+        });
     }
 });
