@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\Message;
 use App\Models\Profile;
 use App\Models\User;
-use App\Models\UserMatch;
+use App\Models\RoomMatch;
 use App\Services\RoomieMatchService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -47,6 +47,10 @@ class MessageFeatureTest extends TestCase
             'sender_id' => $user1->id,
             'content' => 'Hola',
         ]);
+
+        $message = Message::first();
+        $this->assertInstanceOf(RoomMatch::class, $message->match);
+        $this->assertEquals($matchId, $message->match->id);
 
         $response = $this->get("/roomie-match/conversation/{$matchId}");
         $response->assertStatus(200);
