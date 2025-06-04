@@ -4,9 +4,16 @@
 @import 'bootstrap/scss/bootstrap';
 
 // Dark mode styles using custom variables
+body {
+    color: $body-color;
+}
+
 body.dark-mode {
     background-color: $dark-body-bg;
     color: $dark-body-color;
+    a {
+        color: $dark-link-color;
+    }
 }
 
 // Skeleton loading placeholders
