@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\RoomieMatchService;
-use App\Models\Match as RoomMatch;
+
 use App\Models\Message;
+use App\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -38,14 +39,22 @@ class RoomieMatchController extends Controller
         return back();
     }
 
-    public function sendMessage(Request $request, int $matchId): RedirectResponse
+    public function sendMessage(Request $request, int $matchId)
     {
-        $request->validate(['content' => 'required|string']);
-        Message::create([
+        $validated = $request->validate(['content' => 'required|string']);
+
+        $message = Message::create([
             'match_id' => $matchId,
             'sender_id' => Auth::id(),
-            'content' => $request->input('content'),
+            'content' => $validated['content'],
         ]);
+
+        broadcast(new MessageSent($message))->toOthers();
+
+        if ($request->wantsJson()) {
+            return response()->json($message->load('sender'));
+        }
+
         return back();
     }
 
