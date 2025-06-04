@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\UserMatch;
+
 
 class Message extends Model
 {
@@ -18,7 +18,7 @@ class Message extends Model
 
     public function match()
     {
-        return $this->belongsTo(UserMatch::class, 'match_id');
+
     }
 
     public function sender()
