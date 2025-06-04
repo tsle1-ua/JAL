@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4">
     <h2>Conversación</h2>
-<div id="messages" class="border rounded p-3 mb-3" style="height:300px; overflow-y:scroll;">
+<div id="messages" class="border rounded p-3 mb-3" style="height:300px; overflow-y:scroll;" data-match-id="{{ $match->id }}">
         @foreach($messages as $message)
             <div class="mb-2">
                 <strong>{{ $message->sender->name }}:</strong>

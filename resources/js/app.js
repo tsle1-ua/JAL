@@ -5,6 +5,17 @@ import 'nouislider/dist/nouislider.min.css';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
+    forceTLS: true,
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -266,5 +277,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.google && window.google.maps) {
             window.initEventMap();
         }
+    }
+
+    const messagesEl = document.getElementById('messages');
+    const msgForm = document.getElementById('message-form');
+    if (messagesEl && msgForm) {
+        const input = msgForm.querySelector('input[name="content"]');
+        const matchId = messagesEl.dataset.matchId;
+
+        function appendMessage(message) {
+            const div = document.createElement('div');
+            div.classList.add('mb-2');
+            div.innerHTML = `<strong>${message.sender.name}:</strong> ${message.content}`;
+            messagesEl.appendChild(div);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        msgForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const content = input.value.trim();
+            if (!content) return;
+            axios.post(msgForm.action, { content }, { headers })
+                .then(res => {
+                    appendMessage(res.data);
+                    input.value = '';
+                })
+                .catch(err => console.error(err));
+        });
+
+        Echo.private(`match.${matchId}`)
+            .listen('MessageSent', e => {
+                appendMessage(e.message);
+            });
     }
 });
