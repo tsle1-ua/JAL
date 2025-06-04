@@ -13,6 +13,7 @@ class AcademicInfo extends Model
 
     protected $fillable = [
         'university_name',
+        'city',
         'degree_name',
         'cut_off_mark',
         'year',
@@ -94,6 +95,14 @@ class AcademicInfo extends Model
     }
 
     /**
+     * Scope to filter by city.
+     */
+    public function scopeByCity($query, $city)
+    {
+        return $query->where('city', 'like', '%' . $city . '%');
+    }
+
+    /**
      * Scope to filter by type.
      */
     public function scopeByType($query, $type)
@@ -134,6 +143,14 @@ class AcademicInfo extends Model
     {
         return $query->where('type', 'notas-corte')
                     ->whereNotNull('cut_off_mark');
+    }
+
+    /**
+     * Scope to filter cut off marks below or equal to a value.
+     */
+    public function scopeWithCutOffBelow($query, $mark)
+    {
+        return $query->where('cut_off_mark', '<=', $mark);
     }
 
     /**
