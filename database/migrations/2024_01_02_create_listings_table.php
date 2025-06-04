@@ -17,7 +17,11 @@ return new class extends Migration
             $table->string('city');
             $table->string('zip_code')->nullable();
             $table->decimal('price', 10, 2);
-            $table->enum('type', ['apartamento', 'habitacion', 'casa', 'estudio']);
+            $table->enum('type', ['apartamento', 'residencia', 'habitacion', 'casa', 'estudio']);
+            $table->integer('square_meters')->nullable();
+            $table->integer('current_occupants')->default(0);
+            $table->integer('max_occupants')->nullable();
+            $table->string('phone')->nullable();
             $table->integer('bedrooms');
             $table->decimal('bathrooms', 3, 1);
             $table->date('available_from');

@@ -19,6 +19,10 @@ class Listing extends Model
         'zip_code',
         'price',
         'type',
+        'square_meters',
+        'current_occupants',
+        'max_occupants',
+        'phone',
         'bedrooms',
         'bathrooms',
         'available_from',
@@ -39,6 +43,9 @@ class Listing extends Model
             'latitude' => 'decimal:7',
             'longitude' => 'decimal:7',
             'bedrooms' => 'integer',
+            'square_meters' => 'integer',
+            'current_occupants' => 'integer',
+            'max_occupants' => 'integer',
         ];
     }
 
@@ -98,6 +105,7 @@ class Listing extends Model
     {
         $types = [
             'apartamento' => 'Apartamento',
+            'residencia' => 'Residencia',
             'habitacion' => 'Habitación',
             'casa' => 'Casa',
             'estudio' => 'Estudio',
@@ -141,8 +149,20 @@ class Listing extends Model
     {
         $bedrooms = $this->bedrooms . ' ' . ($this->bedrooms == 1 ? 'habitación' : 'habitaciones');
         $bathrooms = $this->bathrooms . ' ' . ($this->bathrooms == 1 ? 'baño' : 'baños');
-        
+
         return $bedrooms . ', ' . $bathrooms;
+    }
+
+    /**
+     * Render occupant icons based on current occupants.
+     */
+    public function getOccupantIconsAttribute(): string
+    {
+        $icons = '';
+        for ($i = 0; $i < $this->current_occupants; $i++) {
+            $icons .= '<i class="bi bi-person-fill me-1"></i>';
+        }
+        return $icons ?: '<i class="bi bi-person"></i>';
     }
 
     /**
