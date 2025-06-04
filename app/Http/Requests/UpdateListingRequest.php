@@ -21,6 +21,9 @@ class UpdateListingRequest extends FormRequest
      */
     public function rules(): array
     {
+        $imageTypes = implode(',', config('services.upload_limits.allowed_image_types', ['jpg','jpeg','png','gif']));
+        $maxSize = config('services.upload_limits.max_image_size', 2048);
+
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2000',
@@ -40,7 +43,7 @@ class UpdateListingRequest extends FormRequest
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'images' => 'nullable|array|max:5',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => "image|mimes:$imageTypes|max:$maxSize",
         ];
     }
 
@@ -76,6 +79,9 @@ class UpdateListingRequest extends FormRequest
      */
     public function messages(): array
     {
+        $imageTypesText = implode(', ', config('services.upload_limits.allowed_image_types', ['jpg', 'jpeg', 'png', 'gif']));
+        $maxSizeMB = (int) (config('services.upload_limits.max_image_size', 2048) / 1024);
+
         return [
             'title.required' => 'El título es obligatorio.',
             'title.max' => 'El título no puede exceder los 255 caracteres.',
@@ -100,8 +106,8 @@ class UpdateListingRequest extends FormRequest
             'images.array' => 'Las imágenes deben enviarse como un array.',
             'images.max' => 'No puedes subir más de 5 imágenes.',
             'images.*.image' => 'Cada archivo debe ser una imagen válida.',
-            'images.*.mimes' => 'Las imágenes deben ser de tipo: jpeg, png, jpg o gif.',
-            'images.*.max' => 'Cada imagen no puede exceder los 2MB.',
+            'images.*.mimes' => "Las imágenes deben ser de tipo: {$imageTypesText}.",
+            'images.*.max' => "Cada imagen no puede exceder los {$maxSizeMB}MB.",
         ];
     }
 }

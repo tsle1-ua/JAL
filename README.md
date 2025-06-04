@@ -219,6 +219,14 @@ php artisan test --coverage
 - `POST /events` - Crear evento
 - `GET /events/{id}` - Ver detalle
 
+### API JSON
+- `GET /api/listings` - Listar alojamientos en formato JSON
+- `GET /api/listings/{id}` - Detalle de un alojamiento
+- `GET /api/events` - Listar eventos en formato JSON
+- `GET /api/events/{id}` - Detalle de un evento
+- `GET /api/places` - Listar lugares
+- `GET /api/places/{id}` - Detalle de un lugar
+
 ### RoomieMatch
 - `GET /roomie-match/discover` - Descubrir potenciales compañeros
 - `POST /roomie-match/like/{user}` - Dar like a usuario
