@@ -14,7 +14,8 @@
         </div>
         <div class="col-md-4">
             <label class="form-label">Ciudad</label>
-            <input type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad">
+            <input type="text" name="city" value="{{ request('city') }}" class="form-control" placeholder="Ciudad" list="city-suggestions" autocomplete="off">
+            <datalist id="city-suggestions"></datalist>
         </div>
         <div class="col-md-4">
             <label class="form-label">Precio (€)</label>

@@ -128,6 +128,10 @@ Route::get('/api/events/recommended', [EventController::class, 'recommended'])
     ->middleware('auth')
     ->name('api.events.recommended');
 
+// Sugerencias de ciudades para autocompletar
+Route::get('/api/cities', [ListingController::class, 'citySuggestions'])
+    ->name('api.cities');
+
 // Rutas de administración
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
