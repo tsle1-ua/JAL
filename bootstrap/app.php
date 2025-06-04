@@ -23,4 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
 
-    })->create();
+    })
+    ->withProviders([
+        \App\Providers\RouteServiceProvider::class,
+        \App\Providers\FortifyServiceProvider::class,
+    ])->create();
