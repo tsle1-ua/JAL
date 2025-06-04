@@ -169,4 +169,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    const registerForm = document.getElementById('register-form');
+    if (registerForm) {
+        const steps = registerForm.querySelectorAll('.form-step');
+        const progressBar = document.getElementById('register-progress');
+        let currentStep = parseInt(registerForm.dataset.step || '0', 10);
+
+        function updateProgress() {
+            if (!progressBar) return;
+            const percent = ((currentStep + 1) / steps.length) * 100;
+            progressBar.style.width = `${percent}%`;
+        }
+
+        function showStep(index) {
+            steps.forEach((step, i) => {
+                step.classList.toggle('d-none', i !== index);
+            });
+            updateProgress();
+        }
+
+        registerForm.querySelectorAll('[data-next]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                const inputs = steps[currentStep].querySelectorAll('input, select');
+                for (const input of inputs) {
+                    if (!input.reportValidity()) {
+                        return;
+                    }
+                }
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        registerForm.querySelectorAll('[data-prev]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+        });
+
+        showStep(currentStep);
+    }
 });
