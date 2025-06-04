@@ -10,6 +10,7 @@
             </div>
         @endif
         <p class="lead">{{ __('You are logged in!') }}</p>
+        <a href="{{ route('listings.my') }}" class="btn btn-primary mt-3">Mis anuncios</a>
     </div>
 </div>
 @endsection
