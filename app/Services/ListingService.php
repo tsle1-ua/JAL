@@ -40,6 +40,16 @@ class ListingService
 
     public function searchListings(array $filters): Collection
     {
+        if (isset($filters['university'])) {
+            $coords = $this->getUniversityCoordinates($filters['university']);
+            if ($coords) {
+                $filters['latitude'] = $coords['lat'];
+                $filters['longitude'] = $coords['lng'];
+                $filters['radius'] = $filters['radius'] ?? 5;
+            }
+            unset($filters['university']);
+        }
+
         return $this->listingRepository->searchWithFilters($filters);
     }
 
@@ -190,6 +200,18 @@ class ListingService
         }
 
         return null;
+    }
+
+    protected function getUniversityCoordinates(string $university): ?array
+    {
+        $universities = [
+            'Universidad de Valencia' => ['lat' => 39.4817, 'lng' => -0.3499],
+            'Universidad Politécnica de Valencia' => ['lat' => 39.4810, 'lng' => -0.3400],
+            'Universidad Complutense de Madrid' => ['lat' => 40.4450, 'lng' => -3.7270],
+            'Universidad de Barcelona' => ['lat' => 41.3869, 'lng' => 2.1650],
+        ];
+
+        return $universities[$university] ?? null;
     }
 
     public function getListingStatistics(): array

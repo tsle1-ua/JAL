@@ -89,6 +89,11 @@ class EloquentListingRepository implements ListingRepositoryInterface
             $q->search($filters['search']);
         });
 
+        $query->when(isset($filters['latitude']) && isset($filters['longitude']), function ($q) use ($filters) {
+            $radius = $filters['radius'] ?? 5;
+            $q->withinRadius($filters['latitude'], $filters['longitude'], $radius);
+        });
+
         return $query->orderBy('created_at', 'desc')->get();
     }
 
