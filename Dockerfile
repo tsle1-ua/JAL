@@ -12,7 +12,10 @@ WORKDIR /var/www
 
 COPY . /var/www
 
-RUN cp .env.example .env && composer install --no-interaction --prefer-dist --no-progress
+RUN cp .env.example .env \
+    && php -r "file_put_contents('.env', preg_replace('/^APP_KEY=.*/m', 'APP_KEY=base64:'.base64_encode(random_bytes(32)), file_get_contents('.env')));" \
+    && touch database/database.sqlite \
+    && composer install --no-interaction --prefer-dist --no-progress
 
 EXPOSE 8000
 
